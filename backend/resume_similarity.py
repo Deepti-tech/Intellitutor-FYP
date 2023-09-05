@@ -9,7 +9,7 @@ import nltk
 nltk.download('stopwords')
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-API_KEY = ''
+API_KEY = 'file:///C:/Users/Deepti%20Singh/Documents/Resume/Deepti%20Singh%20Resume.pdf'
 
 if 'API_KEY' not in locals() or (not API_KEY):
     cprint('NO API KEY FOUND. ADD api key with variable `API_KEY = <YOUR_API_KEY>`', color = 'red')
