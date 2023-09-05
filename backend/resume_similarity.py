@@ -5,7 +5,8 @@ import urllib3
 import pdfplumber
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-
+import nltk
+nltk.download('stopwords')
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 API_KEY = ''
