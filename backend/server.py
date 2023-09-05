@@ -12,7 +12,7 @@ from utils import cprint, unique_filename
 
 app = Flask(__name__)
 app.secret_key = 'dkald@2390'
-app.config['SESSION_COOKIE_HTTPONLY'] = False
+app.config['MONGO_URL'] = 'mongodb://localhost:27017'
 cors = CORS(app)
 
 UPLOAD_FOLDER = 'uploads'
