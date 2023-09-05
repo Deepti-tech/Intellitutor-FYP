@@ -1,0 +1,17 @@
+cd backend
+python -m venv venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+venv\Scripts\activate
+pip install flask flask_cors pymongo pdfplumber nltk SpeechRecognition librosa opencv-python tensorflow
+pip list
+python.exe -m pip install --upgrade pip
+python server.py
+
+server.py:
+app.config['MONGO_URL'] = 'mongodb://localhost:27017' 
+mongo.py: 
+        # self.db = pymongo.MongoClient()[db_name]
+        self.db = pymongo.MongoClient('localhost', 27017)[db_name]
+resume_similarity:
+import nltk
+nltk.download('stopwords')
