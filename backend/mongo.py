@@ -8,7 +8,8 @@ unique_id = lambda : str(uuid1())
 class Mongo:
     def __init__(self, db_name, init_function = None):
         cprint('Mongo Database initialised', color = 'yellow')
-        self.db = pymongo.MongoClient()[db_name]
+        # self.db = pymongo.MongoClient()[db_name]
+        self.db = pymongo.MongoClient('localhost', 27017)[db_name]
 
         if init_function != None:
             init_function(self.db)
