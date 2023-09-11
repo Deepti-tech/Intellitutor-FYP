@@ -168,7 +168,7 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
             }, REFRESH_INTERVAL);
 
             // Set Interval counter in state, so that click on button multiple times don't generate new counters,
-            // if one counter is already running.
+            
             console.warn('Interval counter started')
             setIntervalRunning(true)
         }
@@ -221,7 +221,7 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
             <Navbar selectedPage={linkList.HOME} />
             <div className='page-container'>
                 <div className='sample-interview-div'>
-                    <button className='custom-blue-reverse'  onClick={() => { setVideoPath('uploads/sample.mp4')}}>Load Sample Interview</button>
+                    <button className='custom-blue-reverse'  onClick={() => { setVideoPath('uploads/demo.mp4')}}>Load Sample Interview</button>
                 </div>
                 <div className='profile-orverview'>
 

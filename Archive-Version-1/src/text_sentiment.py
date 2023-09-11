@@ -1,24 +1,21 @@
 import requests
 from nltk.corpus import stopwords 
-#from nltk.tokenize import word_tokenize 
-  
-#example_sent = "This is a sample sentence, showing off the stop words filtration."
-stopwords = set(stopwords.words('english'))
+import nltk
+nltk.download('stopwords')
 
 def text_sentiment():
-    file1 = open("output\\text.txt","r") 
-    print("Output of Readlines afte")
-    data=file1.readlines()
-    print(data)
+    file1 = open("output\\text.txt", "r")
+    data = file1.readlines()
     file1.close()
-    # Remove stop words
-    #stopwords = set(stopwords.words('english'))
-    #print(stopwords) 
+
+    # Convert stopwords to a list
+    stopwords_list = set(stopwords.words('english'))
+
     output = []
     for sentence in data:
         temp_list = []
         for word in sentence.split():
-            if word.lower() not in stopwords:
+            if word.lower() not in stopwords_list:
                 temp_list.append(word)
         output.append(' '.join(temp_list))
 
@@ -29,6 +26,8 @@ def text_sentiment():
         },
         headers={'api-key': '8b3f2d35-c115-4059-9e68-d14a7099659e'}
     )
-    print(r.json()['output'])
+
+    # Print the entire JSON response to see its structure
+    print(r.json())
 
 text_sentiment()

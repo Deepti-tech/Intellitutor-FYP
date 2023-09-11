@@ -7,6 +7,14 @@ pip list
 python.exe -m pip install --upgrade pip
 python server.py
 
+cd frontend
+npm install
+npm start
+
+cd Archive-Version-1\src
+pip install SpeechRecognition praat-parselmouth seaborn nltk
+python main.py
+
 server.py:
 app.config['MONGO_URL'] = 'mongodb://localhost:27017' 
 mongo.py: 

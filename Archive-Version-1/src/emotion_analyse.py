@@ -8,8 +8,8 @@ import numpy as np
 import os
 
 def emotion_analyse():
-    face_classifier = cv2.CascadeClassifier('D:\\projects\\aa\\big-projects\\interview-vedio-analysis\\src\\haarcascade_frontalface_default.xml')
-    classifier =load_model('D:\\projects\\aa\\big-projects\\interview-vedio-analysis\\src\\Emotion_little_vgg.h5')
+    face_classifier = cv2.CascadeClassifier('C:\\Users\\Deepti Singh\\Documents\\FYP\\Intellitutor-FYP\\Archive-Version-1\\src\\haarcascade_frontalface_default.xml')
+    classifier =load_model('C:\\Users\\Deepti Singh\\Documents\\FYP\\Intellitutor-FYP\\backend\\support\\Emotion_little_vgg.h5')
     #classifier = torch.load('C:\\Users\\DELL\\Desktop\\emotion_test\\Emotion_little_vgg.h5')
     class_labels = ['Angry','Happy','Neutral','Sad','Surprise']
 
@@ -32,7 +32,7 @@ def emotion_analyse():
 
 
     ans = dict()
-    cap = cv2.VideoCapture('input\\vedio.mkv')
+    cap = cv2.VideoCapture('src\\input\\demo.mp4')
 
     try:
         while True:
@@ -62,7 +62,7 @@ def emotion_analyse():
                     if(label not in ans.keys()):
                         ans[label]=1
                     else:
-                        ans[label]+=1;
+                        ans[label]+=1
                         
                     label_position = (x,y)
                     #cv2.putText(frame,label,label_position,cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
