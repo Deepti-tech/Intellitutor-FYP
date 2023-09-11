@@ -16,6 +16,7 @@ import {
 } from '../js/httpHandler';
 
 const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, designation }) => {
+    video_path = 'C:/Users/Deepti Singh/Documents/FYP/Intellitutor-FYP/Archive-Version-1/src/input/demo.mp4'
     const [videoPath, setVideoPath] = useState(video_path)
     const [intervalRunning, setIntervalRunning] = useState(false);
     const [resumeAnalysisText, setResumeAnalysisText] = useState('');
@@ -221,7 +222,7 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
             <Navbar selectedPage={linkList.HOME} />
             <div className='page-container'>
                 <div className='sample-interview-div'>
-                    <button className='custom-blue-reverse'  onClick={() => { setVideoPath('uploads/demo.mp4')}}>Load Sample Interview</button>
+                    <button className='custom-blue-reverse'  onClick={() => { setVideoPath('uploads/sample.mp4')}}>Load Sample Interview</button>
                 </div>
                 <div className='profile-orverview'>
 

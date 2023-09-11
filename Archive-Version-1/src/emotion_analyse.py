@@ -66,7 +66,7 @@ def emotion_analyse():
                         
                     label_position = (x,y)
                     #cv2.putText(frame,label,label_position,cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
-                #else:
+                else:
                     cv2.putText(frame,'No Face Found',(20,60),cv2.FONT_HERSHEY_SIMPLEX,2,(0,255,0),3)
             #cv2.imshow('Emotion Detector',frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -78,3 +78,4 @@ def emotion_analyse():
     cap.release()
     cv2.destroyAllWindows()
     print(ans)
+    
