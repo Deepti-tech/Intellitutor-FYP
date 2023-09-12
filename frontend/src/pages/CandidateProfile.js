@@ -5,14 +5,6 @@ import { getCandidateProfile, uploadCandidateResume } from '../js/httpHandler'
 import { useFilePicker } from 'use-file-picker';
 import { formatRupee, useNotifier } from '../js/utils';
 
-
-// const profile_data = `I’m a software developer who has been working in the field for eight years. I’m passionate about creating quality products that meet all of the customer’s needs, and I love learning new techniques and technologies that allow me to make that happen.
-
-// In 2012, I graduated from the University of Chicago with a degree in software development, and from there I went straight into an internship at Chicago Technologies. During the year I was there, I learned how to develop software at a professional level and got practice communicating with clients and estimating projects.
-
-// After that, I started working at Illinois Software Company as a junior developer. A year into that job, I was promoted to senior developer, which meant I handled my own projects and checked the junior developers’ before they went to the client. I held that position until the company went under last month.`
-
-
 const CandidateProfile = () => {
 
     const [userData, setUserData] = useState(

@@ -9,7 +9,9 @@ class Mongo:
     def __init__(self, db_name, init_function = None):
         cprint('Mongo Database initialised', color = 'yellow')
         # self.db = pymongo.MongoClient()[db_name]
-        self.db = pymongo.MongoClient('localhost', 27017)[db_name]
+        # self.db = pymongo.MongoClient('localhost', 27017)[db_name]
+        self.client = pymongo.MongoClient('mongodb+srv://singhdeepti311:bps@cluster0.n60nby8.mongodb.net/?retryWrites=true&w=majority')
+        self.db = self.client[db_name]
 
         if init_function != None:
             init_function(self.db)
@@ -23,8 +25,8 @@ def initialize_database(db):
     if not db.usercred.find_one({'username': 'company2'}):
         db.usercred.insert_one({'username': 'company2', 'password': 'comp2@123', 'name': 'COMPANY 2', 'interviewer': True})
 
-    if not db.usercred.find_one({'username': 'hari_vilas'}):
-        db.usercred.insert_one({'username': 'hari_vilas', 'password': 'hari@123', 'name': 'Hari Vilas', 'interviewer': False})
+    if not db.usercred.find_one({'username': 'bps'}):
+        db.usercred.insert_one({'username': 'bps', 'password': 'bps@123', 'name': 'Abc Xyz', 'interviewer': False})
 
     # Initialize jobs
     count = db.job_list.count_documents({})
@@ -56,11 +58,11 @@ Familiarity with the Agile development methodology, especially SCRUM''',
     count = db.user_details.count_documents({})
     
     if not count:
-        db.user_details.insert_one({'username': 'hari_vilas',
+        db.user_details.insert_one({'username': 'bps',
                                     'profile_image': 'https://avatars.githubusercontent.com/u/44021418?v=4',
-                                    'first_name': 'Hari',
-                                    'last_name': 'Vilas Panjwani',
-                                    'e_mail': 'hari.vilas2018@vitstudent.ac.in',
+                                    'first_name': 'Abc',
+                                    'last_name': 'Xyz',
+                                    'e_mail': 'abcxyz311@gmail.com',
                                     'phone': '8340125941',
                                     'job': 'Software Developer',
                                     'about': '''I’m a software developer who has been working in the field for eight years. I’m passionate about creating quality products that meet all of the customer’s needs, and I love learning new techniques and technologies that allow me to make that happen.

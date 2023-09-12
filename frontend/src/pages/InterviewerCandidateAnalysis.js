@@ -226,10 +226,10 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
                 </div>
                 <div className='profile-orverview'>
 
-                    <div className='profile-image-container'>
+                    {/* <div className='profile-image-container'>
 
                         <img className='profile-image' src={candidateProfile.profile_image} />
-                    </div>
+                    </div> */}
 
                     <span style={{ fontWeight: '600', fontSize: '1.2rem' }}>{`${candidateProfile.first_name} ${candidateProfile.last_name}`}</span>
                     <span style={{ fontSize: '1.05rem' }}>{candidateProfile.job}</span>

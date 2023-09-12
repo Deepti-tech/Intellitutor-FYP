@@ -29,10 +29,10 @@ body {
 }
 
 :root {
-  --ui-color: #893dff;
-  --ui-color-dark: #411d7a;
-  --ui-color-light: #f5efff;
-  --ui-blue: #597dfc;
+  --ui-color: #335478;
+  --ui-color-dark: #294059;
+  --ui-color-light: #eaeef4;
+  --ui-blue: #2d547d;
 }
 
 input.input-default {
@@ -273,7 +273,7 @@ input.custom-und:focus {
 }
 
 button.custom-purple {
-  background-color: var(--ui-color);
+  background-color: #335478;;
   color: white;
   outline: none;
   border: 1px solid var(--ui-color);
@@ -395,7 +395,7 @@ button.custom-blue-reverse:active {
   display: flex;
   flex-direction: row;
   flex: 1;
-  min-height: 95%;
+  min-height: 90%;
   width: 90%;
   margin: 10px 15px 10px 15px;
   background-color: #fcfcfc;

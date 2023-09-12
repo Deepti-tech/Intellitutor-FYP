@@ -42,7 +42,7 @@ const Navbar = (props) => {
         <div style={{position:'relative', zIndex:5}}>
             <div className='navbar-custom'>
                 <div className='navbar-logo' onClick={() => { navigate('/', { replace: true }) }}>
-                    <span style={{ fontSize: '1.6rem', color: '#411D7A', fontWeight: "bold" }}>INTERVIEW.<span style={{ fontSize: '1rem', fontWeight: 'normal' }}> AI</span></span>
+                    <span style={{ fontSize: '1.6rem', color: '#294059', fontWeight: "bold" }}>Intellitutor</span>
                 </div>
 
                 <div className='navbar-links-container' style={{ marginLeft: '50px' }}>

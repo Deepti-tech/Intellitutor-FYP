@@ -22,11 +22,11 @@ const LoginPage = () => {
         const username = userRef.current.value;
         const password = passRef.current.value;
         const userDetails = {username: username, password: password};
-        const candidate_cred = {username: 'hari_vilas', password: 'hari@123'};
+        const candidate_cred = {username: 'bps', password: 'bps'};
         const company1_cred = {username: 'company1', password: 'comp1@123'};
         // const company2_cred = {username: 'company2', password: 'comp2@123'};
-        // loginUser(notifier, candidate_cred, dispatch, navigate);
-        loginUser(notifier, company1_cred, dispatch, navigate);
+        loginUser(notifier, candidate_cred, dispatch, navigate);
+        // loginUser(notifier, company1_cred, dispatch, navigate);
         // loginUser(notifier, company2_cred, dispatch, navigate);
     }
 
@@ -39,7 +39,7 @@ const LoginPage = () => {
                         <b style={{ fontSize: '1.7rem', marginBottom: '5px' }}>Login</b>
 
                         <span style={{ fontSize: '1rem', color: '#4D4D4D' }}>Doesn't have an account yet ? &nbsp;
-                            <b><a href='/sign-up' style={{ color: '#893DFF' }}>Sign-Up</a></b></span><br />
+                            <b><a href='/sign-up' style={{ color: '#335478' }}>Sign-Up</a></b></span><br />
                         
                         <form>
                             <div className='inp-container'>
@@ -75,8 +75,8 @@ const LoginPage = () => {
                         </div>
                     </div>
 
-                    <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <img src={interview_image} width="80%" />
+                    <div style={{ marginLeft: '10%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <img src={interview_image} width="90%" />
                     </div>
                 </div>
             </div>

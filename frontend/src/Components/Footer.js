@@ -3,7 +3,7 @@ import React from 'react'
 const Footer = () => {
     return (
         <div style={FooterStyle}>
-           <span>© Hari Vilas Panjwani 2022.</span>
+           <span>© Intellitutor 2023</span>
         </div>
     )
 }
