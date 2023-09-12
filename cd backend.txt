@@ -15,6 +15,10 @@ cd Archive-Version-1\src
 pip install SpeechRecognition praat-parselmouth seaborn nltk
 python main.py
 
+
+InterviewerCandidateAnalysis.js -> line 19
+
+
 server.py:
 app.config['MONGO_URL'] = 'mongodb://localhost:27017' 
 mongo.py: 
