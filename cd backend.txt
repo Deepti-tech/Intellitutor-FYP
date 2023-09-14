@@ -17,7 +17,7 @@ python main.py
 
 
 InterviewerCandidateAnalysis.js -> line 19
-
+emotion_analyse.py -> line 11
 
 server.py:
 app.config['MONGO_URL'] = 'mongodb://localhost:27017' 
@@ -27,3 +27,11 @@ mongo.py:
 resume_similarity:
 import nltk
 nltk.download('stopwords')
+
+cd backend
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+venv\Scripts\activate
+python server.py
+
+cd frontend
+npm start
