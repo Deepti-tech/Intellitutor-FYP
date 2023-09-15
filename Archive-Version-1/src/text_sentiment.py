@@ -24,7 +24,7 @@ def text_sentiment():
         data={
             'text': output,
         },
-        headers={'api-key': '8b3f2d35-c115-4059-9e68-d14a7099659e'}
+        headers={'api-key': '19735117-4450-461c-8aa0-5080d6de37ff'}
     )
 
     # Print the entire JSON response to see its structure
