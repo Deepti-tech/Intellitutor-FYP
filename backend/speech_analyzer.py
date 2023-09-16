@@ -62,7 +62,7 @@ def pause_detection(audio_path):
 
     topDB = TOP_DB_LEVEL
 
-    nonMuteSections = librosa.effects.split(x, topDB)
+    nonMuteSections = librosa.effects.split(x, top_db = TOP_DB_LEVEL)
     total_time = nonMuteSections[-1][-1] / sr
 
     initial_pause = nonMuteSections[0][0] / sr

@@ -35,3 +35,6 @@ python server.py
 
 cd frontend
 npm start
+
+cd Archive-Version-1\src
+python main.py

@@ -16,7 +16,7 @@ import {
 } from '../js/httpHandler';
 
 const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, designation }) => {
-    video_path = 'C:/Users/Deepti Singh/Documents/FYP/Intellitutor-FYP/Archive-Version-1/src/input/demo.mp4'
+    video_path = 'C:/Users/Deepti Singh/Documents/FYP/Intellitutor-FYP/Archive-Version-1/src/input/d997b4ed-5462-11ee-8ddb-141333178768.mp4'
     const [videoPath, setVideoPath] = useState(video_path)
     const [intervalRunning, setIntervalRunning] = useState(false);
     const [resumeAnalysisText, setResumeAnalysisText] = useState('');

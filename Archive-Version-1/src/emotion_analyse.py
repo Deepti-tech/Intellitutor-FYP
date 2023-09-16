@@ -32,7 +32,7 @@ def emotion_analyse():
 
 
     ans = dict()
-    cap = cv2.VideoCapture('src\\input\\demo.mp4')
+    cap = cv2.VideoCapture('src\\input\\ddad56a6-5455-11ee-937c-141333178768.mp4')
 
     try:
         while True:
