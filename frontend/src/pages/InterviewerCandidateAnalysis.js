@@ -59,13 +59,6 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
                         + (analysisProgress.label.Neutral)
                         - (1.25 * analysisProgress.label.Sad)
                         - (1.5 * analysisProgress.label.Angry)) * (100 / (Math.max(analysisProgress.processed, 1) * 1.5))
-                ),
-                ...candidateScores, audio_score: Math.round(
-                    (0.2 * candidateScores.audio_output.wpm +
-                        0.1 * candidateScores.audio_output.initial_pause_percent +
-                        0.1 * candidateScores.audio_output.mute_percent +
-                        0.2 * candidateScores.audio_output.total_filler_words +
-                        0.2 * candidateScores.audio_output.filler_percent)
                 )
             }
 

@@ -223,7 +223,7 @@ export const analizeCanadidateResume = async (notifier, candidate_username, job_
 
 export const getTaskStatus = async (notifier, task_id) => {
     const resp = await GetRequest('/getTaskStatus', { 'task_id': task_id })
-    console.log(resp)
+    // console.log(resp)
     if (!resp.status) {
         if (resp.msg)
             notifier(resp.msg)
