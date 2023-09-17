@@ -25,6 +25,7 @@ const LoginPage = () => {
         const candidate_cred = {username: 'bps', password: 'bps'};
         const company1_cred = {username: 'company1', password: 'comp1@123'};
         const company2_cred = {username: 'company2', password: 'comp2@123'};
+        
         // loginUser(notifier, candidate_cred, dispatch, navigate);
         loginUser(notifier, company1_cred, dispatch, navigate);
         // loginUser(notifier, company2_cred, dispatch, navigate);
@@ -44,12 +45,12 @@ const LoginPage = () => {
                         <form>
                             <div className='inp-container'>
                                 <span className='inp-label'>Username </span>
-                                <input className='custom-und' autoComplete='new-passoword' ref={userRef}></input>
+                                <input className='custom-und' ref={userRef} required></input>
                             </div>
 
                             <div className='inp-container'>
                                 <span className='inp-label'>Password </span>
-                                <input className='custom-und' autoComplete='new-password' type='password' ref={passRef}></input>
+                                <input className='custom-und' autoComplete='new-password' type='password' ref={passRef} required></input>
                             </div>
                         </form>
 
@@ -59,17 +60,17 @@ const LoginPage = () => {
                             </div>
                             <div style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
                                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flex: 0 }}>
-                                    <div style={{ height: '1px', flex: 1, backgroundColor: '#BDBDBD' }} />
-                                    &nbsp;&nbsp;<span style={{ color: '#BDBDBD', fontSize: '.8rem' }}>or login with</span>&nbsp;&nbsp;
-                                    <div style={{ height: '1px', flex: 1, backgroundColor: '#BDBDBD' }} />
+                                    {/* <div style={{ height: '1px', flex: 1, backgroundColor: '#BDBDBD' }} /> */}
+                                    {/* &nbsp;&nbsp;<span style={{ color: '#BDBDBD', fontSize: '.8rem' }}>or login with</span>&nbsp;&nbsp;
+                                    <div style={{ height: '1px', flex: 1, backgroundColor: '#BDBDBD' }} /> */}
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'row', flex: '1', alignItems: 'center', justifyContent: 'center' }}>
+                                {/* <div style={{ display: 'flex', flexDirection: 'row', flex: '1', alignItems: 'center', justifyContent: 'center' }}>
                                     <button className='btn-google' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', felx: 1 }}>
                                         {google_logo} Google
                                     </button>
 
-                                </div>
+                                </div> */}
                             </div>
 
                         </div>

@@ -353,7 +353,11 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
                                         </div>
                                     </div>
                                     <span style={{ color: 'red', fontSize: '1.3rem' }}>Audio Score: </span>
-                                    <span style={{ fontSize: '1.3rem' }}>{candidateScores.audio_score}</span>
+                                    <span style={{ fontSize: '1.3rem' }}>{Math.round((0.2 * candidateScores.audio_output.wpm +
+                        0.1 * candidateScores.audio_output.initial_pause_percent +
+                        0.1 * candidateScores.audio_output.mute_percent +
+                        0.2 * candidateScores.audio_output.total_filler_words +
+                        0.2 * candidateScores.audio_output.filler_percent))}</span>
 
                                 </div>
                             </div>
