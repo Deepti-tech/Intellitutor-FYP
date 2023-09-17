@@ -35,7 +35,8 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
             'mute_percent': 0,
             'total_filler_words': 0,
             'filler_percent': 0,
-        }
+        },
+        audio_score: 0
     });
     const sourceRef = useRef();
     const videoRef = useRef();
@@ -58,6 +59,13 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
                         + (analysisProgress.label.Neutral)
                         - (1.25 * analysisProgress.label.Sad)
                         - (1.5 * analysisProgress.label.Angry)) * (100 / (Math.max(analysisProgress.processed, 1) * 1.5))
+                ),
+                ...candidateScores, audio_score: Math.round(
+                    (0.2 * candidateScores.audio_output.wpm +
+                        0.1 * candidateScores.audio_output.initial_pause_percent +
+                        0.1 * candidateScores.audio_output.mute_percent +
+                        0.2 * candidateScores.audio_output.total_filler_words +
+                        0.2 * candidateScores.audio_output.filler_percent)
                 )
             }
 
@@ -345,7 +353,7 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
                                         </div>
                                     </div>
                                     <span style={{ color: 'red', fontSize: '1.3rem' }}>Audio Score: </span>
-                                    <span style={{ fontSize: '1.3rem' }}>ABC</span>
+                                    <span style={{ fontSize: '1.3rem' }}>{candidateScores.audio_score}</span>
 
                                 </div>
                             </div>
