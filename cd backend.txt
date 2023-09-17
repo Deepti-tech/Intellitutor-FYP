@@ -15,8 +15,6 @@ cd Archive-Version-1\src
 pip install SpeechRecognition praat-parselmouth seaborn nltk
 python main.py
 
-
-InterviewerCandidateAnalysis.js -> line 19
 emotion_analyse.py -> line 11
 
 server.py:
@@ -28,6 +26,7 @@ resume_similarity:
 import nltk
 nltk.download('stopwords')
 
+----commands after installing everything
 cd backend
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 venv\Scripts\activate
@@ -38,3 +37,7 @@ npm start
 
 cd Archive-Version-1\src
 python main.py
+
+----video path
+vedio_to_text -> line 5
+InterviewerCandidateAnalysis -> line 19
