@@ -25,10 +25,8 @@ const LoginPage = () => {
         const candidate_cred = {username: 'bps', password: 'bps'};
         const company1_cred = {username: 'company1', password: 'comp1@123'};
         const company2_cred = {username: 'company2', password: 'comp2@123'};
-        console.log(username)
         // loginUser(notifier, candidate_cred, dispatch, navigate);
         loginUser(notifier, userDetails, dispatch, navigate);
-        // loginUser(notifier, company2_cred, dispatch, navigate);
     }
 
     return (

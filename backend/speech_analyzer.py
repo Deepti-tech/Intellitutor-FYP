@@ -9,8 +9,8 @@ from utils import cprint
 
 
 def video_to_text(file_path):
-    audio_path = f'..\\Archive-Version-1\\src\\audio.wav'
-    text_file_path = f'uploads\\{uuid1()}.txt'
+    audio_path = f'..\\Archive-Version-1\\src\\input\\{uuid1()}.wav'
+    text_file_path = f'uploads\\audio.txt'
     command2wav = f"support\\ffmpeg -i {file_path} -v quiet -vn -acodec pcm_s16le -ar 44100 -ac 2 {audio_path}"
     cprint(command2wav)
     os.system(command2wav)

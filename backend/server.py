@@ -287,7 +287,7 @@ def postBlob():
     return 'success'
 
 @app.route('/getInterviewVideo', methods=['GET'])
-@cross_origin(supports_credentials=True)
+@cross_origin(supports_credentials=False)
 def serverInterviewVideo():
     file_path = request.args.get('file_path')
     return send_from_directory(*os.path.split(file_path), mimetype='video/webm')

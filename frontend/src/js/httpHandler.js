@@ -249,6 +249,7 @@ export const getStreamId = async (notifier, interview_id) => {
             notifier(resp.msg)
         return ''
     }
+    console.log(interview_id)
     return resp.response;
 }
 
