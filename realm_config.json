@@ -1,0 +1,8 @@
+{
+    "app_id": "intellitutor-fyp-mgjhf",
+    "config_version": 20210101,
+    "name": "Intellitutor-FYP",
+    "location": "US-VA",
+    "provider_region": "aws-us-east-1",
+    "deployment_model": "LOCAL"
+}
