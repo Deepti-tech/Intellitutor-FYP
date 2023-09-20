@@ -6,10 +6,11 @@ import pdfplumber
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import nltk
-nltk.download('stopwords')
+# nltk.download('stopwords')
+nltk.download('punkt')
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-API_KEY = 'file:///C:/Users/Deepti%20Singh/Documents/Resume/Deepti%20Singh%20Resume.pdf'
+API_KEY = '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'
 
 if 'API_KEY' not in locals() or (not API_KEY):
     cprint('NO API KEY FOUND. ADD api key with variable `API_KEY = <YOUR_API_KEY>`', color = 'red')
@@ -62,4 +63,5 @@ def start_similary(file_path, job_description):
     cleaned_resume = cleanText(resume_text)
     cleaned_job_desc = cleanText(job_description)
     result = findsim(cleaned_resume, cleaned_job_desc)
+    print(result)
     return result[0]*100
