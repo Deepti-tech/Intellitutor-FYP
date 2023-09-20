@@ -1,13 +1,14 @@
 import os
 from flask import Flask, request, session, make_response, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
-
+from uuid import uuid1
 import db_actions
 from store import task_store
 from job_manager import job_manager
 from resume_similarity import start_similary
 from speech_analyzer import analize_audio
-from video_analyzer import emotion_analyse
+from video_analyzer import check_video_file,  emotion_analyse
+# from video_analyzer import emotion_analyse
 from utils import cprint, unique_filename
 
 app = Flask(__name__)
@@ -297,6 +298,16 @@ def serverInterviewVideo():
 @cross_origin(supports_credentials=True)
 def analyzeCandidateInterview():
     file_path = request.args.get('filePath', None)
+    _path, file_name = os.path.split(file_path)
+    split_list = file_name.split('.')
+    extension = split_list[-1] if len(split_list) >1 else None
+
+    if extension == 'webm':
+        new_file_path = os.path.join(_path, f'{uuid1()}.mp4')
+        command = f'.\support\\ffmpeg -v quiet -stats -hwaccel qsv -i {file_path} -r 15 -c:v h264_qsv -preset faster {new_file_path}'
+        cprint(command)
+        os.system(command)
+        file_path = new_file_path
     if not file_path:
         return {'msg': 'File Path not found'}, 400
     job_manager.terminate_all()
