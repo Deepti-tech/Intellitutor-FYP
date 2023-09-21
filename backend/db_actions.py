@@ -44,6 +44,15 @@ def get_interview_list(username):
         result = []
     return {'interview_data': result}
 
+def get_practice_interview_list(username):
+    result = mongo.user_practice_interviews.find({'candidate': username}).sort('time', -1)
+    result = convert_cursor(result)
+    for res in result:
+        res['time'] = int(res['time'].replace(
+            tzinfo=timezone.utc).timestamp() * 1000)
+    if not result:
+        result = []
+    return {'interview_data': result}
 
 def get_company_interview_list(username):
     result = mongo.interview_list.find({'lister': username}).sort('time', -1)
@@ -177,3 +186,12 @@ def schedule_candidate_interview(payload):
     
     mongo.interview_list.insert_one(payload)
     return f'Interview scheduled for candidate {payload["candidate"]}'
+
+def schedule_candidate_practice_interview(username, payload):
+    id = unique_id()
+    payload['time'] = datetime.fromtimestamp(payload['time'], tz = timezone.utc)
+    payload['filename'] = f'uploads/{id}.webm' 
+    payload['candidate'] = username   
+    payload['interview_id'] = id
+    mongo.user_practice_interviews.insert_one(payload)
+    return payload['interview_id']

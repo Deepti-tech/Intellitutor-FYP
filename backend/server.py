@@ -50,6 +50,13 @@ def get_interview_list():
         return {'msg': 'Authentication error'}, 401
     return db_actions.get_interview_list(username)
 
+@app.route('/practice_interview_list', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_practice_interview_list():
+    username = session.get('username', None)
+    if not username:
+        return {'msg': 'Authentication error'}, 401
+    return db_actions.get_practice_interview_list(username)
 
 @app.route('/interview_company_list', methods=['GET'])
 @cross_origin(supports_credentials=True)
@@ -88,6 +95,20 @@ def set_interview_completed():
         return {'msg': 'Invalid parameters'}, 400
 
     return db_actions.set_interview_completed(_id)
+
+# @app.route('/set_practice_interview_complete', methods=['GET'])
+# @cross_origin(supports_credentials=True)
+# def set_interview_completed():
+#     interview_id = request.args.get('interview_id', None)
+#     username = session.get('username', None)
+    
+#     if not username:
+#         return {'msg': 'Authentication error'}, 401
+
+#     if not(interview_id):
+#         return {'msg': 'Invalid parameters'}, 400
+
+#     return db_actions.set_interview_completed(interview_id)
 
 
 @app.route('/job_list', methods=['GET'])
@@ -271,11 +292,30 @@ def schedule_candidate_interview():
         return {'msg': 'No payload provided'}, 400
     return db_actions.schedule_candidate_interview(payload)
 
+@app.route('/scheduleCandidatePracticeInterview', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def schedule_candidate_practice_interview():
+    username = session.get('username', None)
+    if not username:
+        return {'msg': 'Authentication error'}, 401
+    payload = request.json
+    if not payload:
+        return {'msg': 'No payload provided'}, 400
+    return db_actions.schedule_candidate_practice_interview(username, payload)
+
 @app.route('/initializeInterviewStream', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def initializeInterviewStream():
     interview_id = request.args.get('interview_id')
     stream_id = task_store.create_stream_file(interview_id)
+    cprint(stream_id)
+    return stream_id
+
+@app.route('/initializePracticeInterviewStream', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def initializePracticeInterviewStream():
+    interview_id = request.args.get('interview_id')
+    stream_id = task_store.create_practice_stream_file(interview_id)
     cprint(stream_id)
     return stream_id
 

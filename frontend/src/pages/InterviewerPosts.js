@@ -54,7 +54,6 @@ const OpeningItem = (props) => {
 
 
   const scheduleInterview = async (candidate_username) => {
-
     const payload = {
       'time': parseInt(Date.parse(new Date) / 1000) + 18000,
       'job_id': job_id,
@@ -67,7 +66,6 @@ const OpeningItem = (props) => {
     const response = await scheduleCandidateInterview(notifier, payload)
     if (response)
       notifier(response)
-
   }
 
 

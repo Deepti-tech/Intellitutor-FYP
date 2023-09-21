@@ -14,6 +14,13 @@ class TaskStore:
         stream_id = unique_id()
         self.store[stream_id] = StreamHandler(file_location)
         return stream_id
+    
+    def create_practice_stream_file(self, interview_id):
+        cprint(interview_id)
+        file_location = mongo.db.user_practice_interviews.find_one({'interview_id' : interview_id})[('filename')]
+        stream_id = unique_id()
+        self.store[stream_id] = StreamHandler(file_location)
+        return stream_id
 
 class StreamHandler:
     def __init__(self, file_location):

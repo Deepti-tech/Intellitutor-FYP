@@ -77,6 +77,15 @@ export const getCandidateInterview = async (notifier) => {
     return resp.response.interview_data
 }
 
+export const getCandidatePracticeInterview = async (notifier) => {
+    const resp = await GetRequest('/practice_interview_list');
+    if (!resp.status) {
+        if (resp.msg)
+            notifier(resp.msg)
+        return []
+    }
+    return resp.response.interview_data
+}
 
 export const getCandidateJobs = async (notifier) => {
     const resp = await GetRequest('/job_list');
@@ -137,6 +146,15 @@ export const setInterviewComplete = async (notifier, _id) => {
     }
     return resp.response
 }
+// export const setPracticeInterviewComplete = async (notifier, interview_id) => {
+//     const resp = await GetRequest('/set_practice_interview_complete', { 'interview_id': interview_id })
+//     if (!resp.status) {
+//         if (resp.msg)
+//             notifier(resp.msg)
+//         return ''
+//     }
+//     return resp.response
+// }
 
 export const getInterviewerOpenings = async (notifier,) => {
     const resp = await GetRequest('/openingsPosted');
@@ -241,9 +259,28 @@ export const scheduleCandidateInterview = async (notifier, payload) => {
     }
     return resp.response
 }
+export const scheduleCandidatePracticeInterview = async (notifier, payload) => {
+    const resp = await PostRequest('/scheduleCandidatePracticeInterview', payload);
+    if (!resp.status) {
+        if (resp.msg)
+            notifier(resp.msg)
+        return ''
+    }
+    return resp.response
+}
 
 export const getStreamId = async (notifier, interview_id) => {
     const resp = await GetRequest('/initializeInterviewStream', { 'interview_id': interview_id });
+    if (!resp.status) {
+        if (resp.msg)
+            notifier(resp.msg)
+        return ''
+    }
+    return resp.response;
+}
+
+export const getPracticeStreamId = async (notifier, interview_id) => {
+    const resp = await GetRequest('/initializePracticeInterviewStream', { 'interview_id': interview_id });
     if (!resp.status) {
         if (resp.msg)
             notifier(resp.msg)
