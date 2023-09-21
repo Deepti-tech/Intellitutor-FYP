@@ -1,23 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Navbar, { linkList } from '../Components/Navbar'
-import { getPracticeStreamId, sendBlobData } from '../js/httpHandler'
-import { useNotifier } from '../js/utils';
-import { scheduleCandidatePracticeInterview } from '../js/httpHandler';
 import InputBox from '../Components/InputBox';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useIsMount, useNotifier } from '../js/utils';
+import {
+    getPracticeStreamId, sendBlobData,
+    scheduleCandidatePracticeInterview
+} from '../js/httpHandler';
 
+var videoPath
 
 const CandidatePracticeInterview = ({ }) => {
     const [permissionError, setPermissionError] = useState(false);
     const [permissionGranted, setPermissionGranted] = useState(false);
     const [mediaRecorder, setMediaRecorder] = useState(null);
     const [streamId, setStreamId] = useState('');
+    
     const videoFrameRef = useRef();
     const notifier = useNotifier();
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     var id = ""
+     
     const [isRecording, setIsRecording] = useState(false);
     // const [mediaStream, setMediaStream] = useState(null);
+
     const send_blobs = async (blob_data) => {
         if (streamId) {
             sendBlobData(notifier, streamId, blob_data)
@@ -37,6 +43,7 @@ const CandidatePracticeInterview = ({ }) => {
         }
         id = response
         allowRecording()
+        videoPath = 'uploads/' + id + '.webm'
       }
 
     useEffect(() => {
@@ -84,6 +91,9 @@ const CandidatePracticeInterview = ({ }) => {
             mediaRecorder.stop();
             setIsRecording(false); 
         }
+        // document.getElementById('recording_frame').style.display='none';
+        // console.log(videoPath)
+        return navigate('/practiceInterviewAnalysis', {state: {videoPath: videoPath}});
         // if (mediaStream) {
         //     const tracks = mediaStream.getTracks();
         //     tracks.forEach((track) => {
@@ -92,6 +102,10 @@ const CandidatePracticeInterview = ({ }) => {
         // }
     };
 
+    // const [videoPath, setVideoPath] = useState()
+    
+    
+    
     return (
         <div className='page-wrapper'>
             <Navbar selectedPage={linkList.PRACTICE_INTERVIEW} />
@@ -121,9 +135,10 @@ const CandidatePracticeInterview = ({ }) => {
                         </div>}
                     </div>
                 </div>
-                <div className={`video-container ${(permissionGranted) ? 'visible' : ''}`}>
+                <div id="recording_frame" className={`video-container ${(permissionGranted) ? 'visible' : ''}`}>
                     <video className='video-frame' autoPlay onLoadStart={(e) => { e.currentTarget.volume = 0 }} ref={videoFrameRef}></video>
                 </div>
+                
             </div>
         </div>  
     )

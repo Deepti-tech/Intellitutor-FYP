@@ -14,6 +14,7 @@ import CandidateProfile from './pages/CandidateProfile';
 import CandidateJobDetails from './pages/CandidateJobDetails';
 import CandidateInterviewPage from './pages/CandidateInterviewPage';
 import CandidatePracticeInterview from './pages/CandidatePracticeInterview';
+import CandidatePracticeInterviewAnalysis from './pages/CandidatePracticeInterviewAnalysis';
 import InterviewerPosts from './pages/InterviewerPosts';
 import InterviewerCandProfile from './pages/InterviewerCandProfile';
 import InterviewerOpening from './pages/InterviewerOpening';
@@ -47,6 +48,11 @@ root.render(
           <Route exact path='/practiceInterview' element={
             <ProtectedRoutes>
               <CandidatePracticeInterview />
+            </ProtectedRoutes>} />
+
+          <Route exact path='/practiceInterviewAnalysis' element={
+            <ProtectedRoutes>
+              <CandidatePracticeInterviewAnalysis/>
             </ProtectedRoutes>} />
 
           <Route exact path='/postedJobs' element={

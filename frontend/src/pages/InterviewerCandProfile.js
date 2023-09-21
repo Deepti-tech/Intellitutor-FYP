@@ -14,7 +14,6 @@ const InterviewerCandProfile = (props) => {
     const [resumeAnalysisText, setResumeAnalysisText] = useState('');
     const isResumeUploaded = () => { return (userData.resume_location.constructor === String && userData.resume_location !== '') };
 
-
     const [userData, setUserData] = useState(
         {
             first_name: '',
