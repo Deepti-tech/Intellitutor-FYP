@@ -15,7 +15,8 @@ import {
     analizeCanadidateResume,
     getTaskStatus,
     analizeCanadidateVideo,
-    analizeCanadidateAudio
+    analizeCanadidateAudio,
+    setPracticeInterviewScore
 } from '../js/httpHandler';
 
 const CandidatePracticeInterviewAnalysis = ({}) => {
@@ -48,7 +49,7 @@ const [audioStarted, setAudioStarted] = useState(false);
 const [audioCompleted, setAudioCompleted] = useState(false)
 const REFRESH_INTERVAL = 1500;
 const videoPath = state.videoPath
-// console.log(videoPath)
+const interview_id = state.id
 useEffect(() => {
     // if (sourceRef.current.src && videoRef.current) {
     //     sourceRef.current.src = `http://localhost:5000/getInterviewVideo?file_path=${videoPath}`
@@ -72,6 +73,29 @@ useEffect(() => {
 
     )
 }, [analysisProgress])
+
+useEffect(() => {
+    const payload = {
+        'Happy': analysisProgress.label.Happy,
+        'Sad': analysisProgress.label.Sad,
+        'Angry': analysisProgress.label.Angry,
+        'Surprise': analysisProgress.label.Surprise,
+        'Neutral': analysisProgress.label.Neutral,
+        'video_score': candidateScores.video_score,
+        'speed': candidateScores.audio_output.speed,
+        'wpm': candidateScores.audio_output.wpm,
+        'initial_pause_percent': candidateScores.audio_output.initial_pause_percent,
+        'mute_percent': candidateScores.audio_output.mute_percent,
+        'total_filler_words': candidateScores.audio_output.total_filler_words,
+        'filler_percent': candidateScores.audio_output.filler_percent,
+        'audio_score': 0.2 * candidateScores.audio_output.wpm +
+        0.1 * candidateScores.audio_output.initial_pause_percent +
+        0.1 * candidateScores.audio_output.mute_percent +
+        0.2 * candidateScores.audio_output.total_filler_words +
+        0.2 * candidateScores.audio_output.filler_percent,
+    }
+    setPracticeInterviewScore(interview_id, payload)
+})
 
 const analizeInterview = async () => {
 

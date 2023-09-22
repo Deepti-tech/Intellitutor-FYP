@@ -8,7 +8,7 @@ import {
     scheduleCandidatePracticeInterview
 } from '../js/httpHandler';
 
-var videoPath
+var videoPath, id
 
 const CandidatePracticeInterview = ({ }) => {
     const [permissionError, setPermissionError] = useState(false);
@@ -19,7 +19,7 @@ const CandidatePracticeInterview = ({ }) => {
     const videoFrameRef = useRef();
     const notifier = useNotifier();
     const navigate = useNavigate();
-    var id = ""
+    // var id = ""
      
     const [isRecording, setIsRecording] = useState(false);
     // const [mediaStream, setMediaStream] = useState(null);
@@ -93,7 +93,7 @@ const CandidatePracticeInterview = ({ }) => {
         }
         // document.getElementById('recording_frame').style.display='none';
         // console.log(videoPath)
-        return navigate('/practiceInterviewAnalysis', {state: {videoPath: videoPath}});
+        return navigate('/practiceInterviewAnalysis', {state: {videoPath: videoPath, id: id}});
         // if (mediaStream) {
         //     const tracks = mediaStream.getTracks();
         //     tracks.forEach((track) => {

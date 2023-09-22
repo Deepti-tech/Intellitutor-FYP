@@ -146,15 +146,15 @@ export const setInterviewComplete = async (notifier, _id) => {
     }
     return resp.response
 }
-// export const setPracticeInterviewComplete = async (notifier, interview_id) => {
-//     const resp = await GetRequest('/set_practice_interview_complete', { 'interview_id': interview_id })
-//     if (!resp.status) {
-//         if (resp.msg)
-//             notifier(resp.msg)
-//         return ''
-//     }
-//     return resp.response
-// }
+export const setPracticeInterviewScore = async (interview_id, payload) => {
+    const resp = await GetRequest('/set_practice_interview_score', {'interview_id': interview_id, 'payload': payload})
+    if (!resp.status) {
+        if (resp.msg)
+            // notifier(resp.msg)
+        return ''
+    }
+    return resp.response
+}
 
 export const getInterviewerOpenings = async (notifier,) => {
     const resp = await GetRequest('/openingsPosted');
@@ -241,7 +241,6 @@ export const analizeCanadidateResume = async (notifier, candidate_username, job_
 
 export const getTaskStatus = async (notifier, task_id) => {
     const resp = await GetRequest('/getTaskStatus', { 'task_id': task_id })
-    // console.log(resp)
     if (!resp.status) {
         if (resp.msg)
             notifier(resp.msg)

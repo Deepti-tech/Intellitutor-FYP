@@ -7,8 +7,7 @@ from store import task_store
 from job_manager import job_manager
 from resume_similarity import start_similary
 from speech_analyzer import analize_audio
-from video_analyzer import check_video_file,  emotion_analyse
-# from video_analyzer import emotion_analyse
+from video_analyzer import emotion_analyse
 from utils import cprint, unique_filename
 
 app = Flask(__name__)
@@ -96,19 +95,20 @@ def set_interview_completed():
 
     return db_actions.set_interview_completed(_id)
 
-# @app.route('/set_practice_interview_complete', methods=['GET'])
-# @cross_origin(supports_credentials=True)
-# def set_interview_completed():
-#     interview_id = request.args.get('interview_id', None)
-#     username = session.get('username', None)
+@app.route('/set_practice_interview_score', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def set_practice_interview_score():
+    interview_id = request.args.get('interview_id', None)
+    payload = request.args.get('payload', None)
+    username = session.get('username', None)
     
-#     if not username:
-#         return {'msg': 'Authentication error'}, 401
+    if not username:
+        return {'msg': 'Authentication error'}, 401
 
-#     if not(interview_id):
-#         return {'msg': 'Invalid parameters'}, 400
-
-#     return db_actions.set_interview_completed(interview_id)
+    if not(interview_id):
+        return {'msg': 'Invalid parameters'}, 400
+    # payload['audio_score'] = 0.2 *payload['wpm'] + 0.1 *payload['initial_pause_percent'] + 0.1 *payload['mute_percent'] + 0.2 *payload['total_filler_words'] + 0.2 *payload['filler_percent']
+    return db_actions.set_practice_interview_score(interview_id, payload)
 
 
 @app.route('/job_list', methods=['GET'])

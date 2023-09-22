@@ -81,6 +81,11 @@ def set_interview_completed(_id):
                                     '$set': {'completed': True}})
     return 'success'
 
+def set_practice_interview_score(interview_id, payload):
+    
+    payload_dict = json.loads(payload)
+    mongo.user_practice_interviews.update_one({'interview_id': interview_id}, {'$set': payload_dict})
+    return 'success'
 
 def get_job_list(username):
     applied = mongo.job_list.find({'applied': username}, {'applied': 0})
@@ -193,5 +198,18 @@ def schedule_candidate_practice_interview(username, payload):
     payload['filename'] = f'uploads/{id}.webm' 
     payload['candidate'] = username   
     payload['interview_id'] = id
+    payload['Happy'] = '0'
+    payload['Sad'] = '0'
+    payload['Angry'] = '0'
+    payload['Surprise'] = '0'
+    payload['Neutral'] = '0'
+    payload['video_score'] = '0'
+    payload['speed'] = '0'
+    payload['wpm'] = '0'
+    payload['initial_pause_percent'] = '0'
+    payload['mute_percent'] = '0'
+    payload['total_filler_words'] = '0'
+    payload['filler_percent'] = '0'
+    payload['audio_score'] = '0'
     mongo.user_practice_interviews.insert_one(payload)
     return payload['interview_id']
