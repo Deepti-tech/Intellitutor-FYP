@@ -12,48 +12,57 @@ const Dashboard = ({}) => {
         get_plot(notifier)
           .then((response) => {
             setAudioData(response);
-            // Destroy the previous chart instance, if it exists
-            if (chartInstance) {
-              chartInstance.destroy();
-            }
-            // Create a new chart instance
-            const ctx = document.getElementById('myChart').getContext('2d');
-            const newChartInstance = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: ['1', '2', '3', '4'],
-                datasets: [
-                  {
-                    label: 'Audio Analysis',
-                    data: audioData,
-                    backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(255, 159, 64, 0.2)',
-                      'rgba(255, 205, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                    ],
-                    borderColor: [
-                      'rgb(255, 99, 132)',
-                      'rgb(255, 159, 64)',
-                      'rgb(255, 205, 86)',
-                      'rgb(75, 192, 192)',
-                    ],
-                    borderWidth: 1,
-                  },
-                ],
-              },
-              options: {
-                maintainAspectRatio: false,
-              },
-            });
-            // Set the new chart instance in state
-            setChartInstance(newChartInstance);
           })
           .catch((error) => {
             console.error('Error fetching audio data:', error);
           });
-      }, [notifier, audioData, chartInstance]);
-  console.log(audioData)
+      }, [notifier]); // Only trigger the effect when 'notifier' changes
+    
+      useEffect(() => {
+        if (audioData.length === 0) {
+          // Do nothing if audioData is empty
+          return;
+        }
+        // console.log(audioData)
+        // Destroy the previous chart instance, if it exists
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+    
+        // Create a new chart instance
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const newChartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['1', '2', '3', '4'],
+            datasets: [
+              {
+                label: 'Audio Analysis',
+                data: audioData,
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 205, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                ],
+                borderColor: [
+                  'rgb(255, 99, 132)',
+                  'rgb(255, 159, 64)',
+                  'rgb(255, 205, 86)',
+                  'rgb(75, 192, 192)',
+                ],
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            maintainAspectRatio: false,
+          },
+        });
+    
+        // Set the new chart instance in state
+        setChartInstance(newChartInstance);
+      }, [audioData]); 
     const data = {
         labels: ['1', '2', '3', '4'],
         datasets: [
