@@ -1,8 +1,6 @@
 import axios from 'axios'
 import { updateLogin } from '../redux/actions/actions'
-
 const BASE_URL = 'http://localhost:5000';
-
 
 const PostRequest = async (_url, payload, isJson = true) => {
     const url = BASE_URL + _url
@@ -180,6 +178,16 @@ export const getCandidateProfile = async (notifier, candidate_username) => {
     }
     return resp.response.profile
 }
+export const get_plot= async(notifier) =>{
+    const resp = await GetRequest('/get_plot');
+    if (!resp.status) {
+        if (resp.msg)
+            notifier(resp.msg)
+        return ''
+    }
+    // console.log(resp)
+    return resp.response
+}
 
 export const uploadCandidateResume = async (notifier, file) => {
     const formData = new FormData();
@@ -303,7 +311,6 @@ export const analizeCanadidateVideo = async (notifier, video_path) => {
         return ''
     }
     return resp.response
-
 }
 
 export const analizeCanadidateAudio = async (notifier, video_path) => {

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, session, make_response, render_template, send_from_directory
+from flask import Flask, request, session, make_response, render_template, send_from_directory, send_file
 from flask_cors import CORS, cross_origin
 from uuid import uuid1
 import db_actions
@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.secret_key = 'dkald@2390'
 app.config['MONGO_URL'] = 'mongodb://localhost:27017'
 cors = CORS(app)
-
+# cors = CORS(app, supports_credentials=True, origins="http://localhost:3000")
 UPLOAD_FOLDER = 'uploads'
 
 
@@ -365,6 +365,11 @@ def analizeCanadidateAudio():
     task_id = job_manager.add_job(analize_audio, file_path)
     return task_id
 
+@app.route('/get_plot')
+@cross_origin(supports_credentials=True)
+def get_plot():
+    username = session.get('username', None)
+    return db_actions.get_plot(username)
 
 if __name__ == '__main__':
     app.run(debug=True)

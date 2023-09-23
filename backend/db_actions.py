@@ -7,7 +7,6 @@ from utils import cprint, unique_id
 from pymongo.cursor import Cursor
 mongo = mongo.db
 
-
 def convert_cursor(crx):
     def format_result(x):
         _id = x.get('_id', None)
@@ -213,3 +212,14 @@ def schedule_candidate_practice_interview(username, payload):
     payload['audio_score'] = '0'
     mongo.user_practice_interviews.insert_one(payload)
     return payload['interview_id']
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+
+def get_plot(username):
+    audioData = []
+    result = mongo.user_practice_interviews.find({'candidate': username})
+    result = convert_cursor(result)
+    for res in result:
+        audioData.append(res['audio_score'])
+    return audioData
