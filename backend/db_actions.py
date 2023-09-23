@@ -218,8 +218,44 @@ import matplotlib.pyplot as plt
 
 def get_plot(username):
     audioData = []
+    videoData = []
+    Happy=[]
+    Sad=[]
+    Neutral=[]
+    Surprise=[]
+    Angry=[]
+    wpm=[]
+    initial_pause_percent=[]
+    mute_percent=[]
+    total_filler_words=[]
+    filler_percent=[]
     result = mongo.user_practice_interviews.find({'candidate': username})
     result = convert_cursor(result)
     for res in result:
         audioData.append(res['audio_score'])
-    return audioData
+        videoData.append(res['video_score'])
+        Happy.append(res['Happy'])
+        Sad.append(res['Sad'])
+        Neutral.append(res['Neutral'])
+        Surprise.append(res['Surprise'])
+        Angry.append(res['Angry'])
+        wpm.append(res['wpm'])
+        initial_pause_percent.append(res['initial_pause_percent'])
+        mute_percent.append(res['mute_percent'])
+        total_filler_words.append(res['total_filler_words'])
+        filler_percent.append(res['filler_percent'])
+    data = {
+        'audioData': audioData,
+        "videoData": videoData,
+        "Happy": Happy,
+        "Sad": Sad,
+        "Angry": Angry,
+        "Surprise": Surprise,
+        "Neutral": Neutral,
+        "wpm": wpm,
+        "initial_pause_percent": initial_pause_percent,
+        "mute_percent": mute_percent,
+        "total_filler_words": total_filler_words,
+        "filler_percent": filler_percent,
+    }
+    return data
