@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Navbar, { linkList } from '../Components/Navbar'
 import InputBox from '../Components/InputBox';
 import { useNavigate } from 'react-router-dom';
-import { useIsMount, useNotifier } from '../js/utils';
+import { useNotifier } from '../js/utils';
 import {
     getPracticeStreamId, sendBlobData,
     scheduleCandidatePracticeInterview
@@ -19,10 +19,8 @@ const CandidatePracticeInterview = ({ }) => {
     const videoFrameRef = useRef();
     const notifier = useNotifier();
     const navigate = useNavigate();
-    // var id = ""
      
     const [isRecording, setIsRecording] = useState(false);
-    // const [mediaStream, setMediaStream] = useState(null);
 
     const send_blobs = async (blob_data) => {
         if (streamId) {
@@ -57,7 +55,6 @@ const CandidatePracticeInterview = ({ }) => {
                         send_blobs(blob_data);
                     }
                     reader.readAsArrayBuffer(e.data);
-                    //const blob_data = new Blob(e.data, { type: ' { type: 'video/ webm' }' });
                 };
             mediaRecorder.start(5000);
         }
@@ -70,7 +67,6 @@ const CandidatePracticeInterview = ({ }) => {
                 document.getElementById('questions').style.display = 'flex';
                 document.getElementById('complete').style.opacity = '1';
                 setPermissionGranted(true);
-                // setMediaStream(permissionObj);
                 setIsRecording(true);
                 videoFrameRef.current.srcObject = permissionObj;
                 
@@ -91,21 +87,9 @@ const CandidatePracticeInterview = ({ }) => {
             mediaRecorder.stop();
             setIsRecording(false); 
         }
-        // document.getElementById('recording_frame').style.display='none';
-        // console.log(videoPath)
         return navigate('/practiceInterviewAnalysis', {state: {videoPath: videoPath, id: id}});
-        // if (mediaStream) {
-        //     const tracks = mediaStream.getTracks();
-        //     tracks.forEach((track) => {
-        //         track.stop();
-        //     });
-        // }
     };
 
-    // const [videoPath, setVideoPath] = useState()
-    
-    
-    
     return (
         <div className='page-wrapper'>
             <Navbar selectedPage={linkList.PRACTICE_INTERVIEW} />

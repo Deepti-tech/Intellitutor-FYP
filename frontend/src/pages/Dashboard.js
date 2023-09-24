@@ -47,9 +47,10 @@ const Dashboard = ({}) => {
           {
             label: 'Video',
             data: score.videoData,
-            backgroundColor: ['black'],
+            backgroundColor: ['rgba(0, 0, 0, 0.5)'],
             borderColor: ['Black'],
             borderWidth: 1,
+            fill: true,
           },
         ],
       };
@@ -59,9 +60,10 @@ const Dashboard = ({}) => {
           {
             label: 'Speech',
             data: score.audioData,
-            backgroundColor: ['black'],
+            backgroundColor: ['rgba(0, 0, 0, 0.5)'],
             borderColor: ['black'],
             borderWidth: 1,
+            fill: true,
           },
         ],
       };
@@ -69,11 +71,12 @@ const Dashboard = ({}) => {
         labels: Array.from(Array(noOfInterviews).keys()),
         datasets: [
           {
-            label: 'Speech',
+            label: 'QnA',
             data: score.audioData,
-            backgroundColor: ['black'],
+            backgroundColor: ['rgba(0, 0, 0, 0.5)'],
             borderColor: ['black'],
             borderWidth: 1,
+            fill: true,
           },
         ],
       };
@@ -168,7 +171,7 @@ const Dashboard = ({}) => {
       };
       const highestAudioScore = score.audioData?.reduce((a, b) => Math.max(a, b), 0) || 0;
       const highestVideoScore = score.videoData?.reduce((a, b) => Math.max(a, b), 0) || 0;
-    //   const highestQnAScore = score.qnaData?.reduce((a, b) => Math.max(a, b), 0) || 0;
+      const highestQnAScore = score.videoData?.reduce((a, b) => Math.max(a, b), 0) || 0;
       
     return(
         <div className='page-wrapper'>
@@ -196,7 +199,7 @@ const Dashboard = ({}) => {
                         </div>
                     </div>
                     <div style={{width: '300px', height: '300px', backgroundColor: '#eaeef4', borderRadius: 16, borderStyle:'solid', borderColor: 'black', padding: '5px 10px'}}>
-                        <span style={{fontWeight: 'bolder', fontSize: '25px'}}>{Math.round(highestAudioScore)}</span><br/>
+                        <span style={{fontWeight: 'bolder', fontSize: '25px'}}>{Math.round(highestQnAScore)}</span><br/>
                         <span> QnA Analysis</span>
                         <div>
                             <Line data={QnAScore} options={{options}} height={400} width={700} />
