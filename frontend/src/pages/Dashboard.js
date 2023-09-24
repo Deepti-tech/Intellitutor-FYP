@@ -8,12 +8,13 @@ import Chart from 'chart.js/auto';
 const Dashboard = ({}) => {
     const notifier = useNotifier();
     const [score, setScore] = useState([]);
-    
+    const [noOfInterviews, setLength] = useState([]);
     const [chartInstance, setChartInstance] = useState(null);
     useEffect(() => {
         get_plot(notifier)
           .then((response) => {
             setScore(response);
+            setLength(response.Angry.length)
           })
           .catch((error) => {
             console.error('Error fetching audio data:', error);
@@ -31,7 +32,7 @@ const Dashboard = ({}) => {
         const newChartInstance = new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: ['1', '2', '3', '4'],
+            labels: Array.from(Array(noOfInterviews).keys()),
             datasets: [{label: 'Speech Analysis', data: score.audioData, backgroundColor: ['rgba(75, 192, 192, 0.2)'], borderColor: ['rgb(75, 192, 192)'], borderWidth: 1,},],
           },
           options: {
@@ -41,7 +42,7 @@ const Dashboard = ({}) => {
         setChartInstance(newChartInstance);
       }, [score]); 
       const VideoScore = {
-        labels: ['1', '2', '3', '4'],
+        labels: Array.from(Array(noOfInterviews).keys()),
         datasets: [
           {
             label: 'Video',
@@ -53,7 +54,7 @@ const Dashboard = ({}) => {
         ],
       };
       const AudioScore = {
-        labels: ['1', '2', '3', '4'],
+        labels: Array.from(Array(noOfInterviews).keys()),
         datasets: [
           {
             label: 'Speech',
@@ -65,7 +66,7 @@ const Dashboard = ({}) => {
         ],
       };
       const QnAScore = {
-        labels: ['1', '2', '3', '4'],
+        labels: Array.from(Array(noOfInterviews).keys()),
         datasets: [
           {
             label: 'Speech',
@@ -77,7 +78,7 @@ const Dashboard = ({}) => {
         ],
       };
     const Audiodata = {
-        labels: ['1', '2', '3', '4'],
+        labels: Array.from(Array(noOfInterviews).keys()),
         datasets: [
           {
             label: 'WPM',
@@ -117,7 +118,7 @@ const Dashboard = ({}) => {
         ],
       };
       const Videodata = {
-        labels: ['1', '2', '3', '4'],
+        labels: Array.from(Array(noOfInterviews).keys()),
         datasets: [
           {
             label: 'Happy',
