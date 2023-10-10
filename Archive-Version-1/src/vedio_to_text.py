@@ -2,7 +2,7 @@ import os
 import speech_recognition as sr
 
 def vedio_to_text():
-    command2mp3 = "ffmpeg -i input\\d997b4ed-5462-11ee-8ddb-141333178768.mp4 gen\\audio.mp3"
+    command2mp3 = "ffmpeg -i input\\demo.mp4 gen\\audio.mp3"
     command2wav = "ffmpeg -i gen\\audio.mp3 audio.wav"
 
     os.system(command2mp3)

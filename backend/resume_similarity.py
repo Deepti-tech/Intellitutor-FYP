@@ -6,8 +6,9 @@ import pdfplumber
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import nltk
-# nltk.download('stopwords')
+nltk.download('stopwords')
 nltk.download('punkt')
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 API_KEY = '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'

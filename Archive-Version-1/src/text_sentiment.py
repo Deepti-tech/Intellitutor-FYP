@@ -4,7 +4,7 @@ import nltk
 nltk.download('stopwords')
 
 def text_sentiment():
-    file1 = open("output\\text.txt", "r")
+    file1 = open("output\\audio.txt", "r")
     data = file1.readlines()
     file1.close()
 
