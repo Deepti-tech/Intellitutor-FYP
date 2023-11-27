@@ -101,7 +101,6 @@ const CandidatePracticeInterview = ({ }) => {
                     <div id='role_info'>
                         <span style={{ fontSize: '1.2rem', fontWeight: '600' }}>Enter the role you are preparing for...</span>
                         <InputBox style={{ height: '35px' }} clsName='custom-input-style' />
-                        {/* <InputBox style={{ height: '35px' }} clsName='custom-input-style' ref={refs.DESIGNATION} /> */}
                     </div>
                     <div id='questions' style={{display: 'none'}}>
                         <span style={{ fontSize: '1.2rem', fontWeight: '600' }}>Questions...</span>
