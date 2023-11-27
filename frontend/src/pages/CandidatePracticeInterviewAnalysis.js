@@ -34,6 +34,7 @@ const [candidateScores, setCandidateScores] = useState({
         'mute_percent': 0,
         'total_filler_words': 0,
         'filler_percent': 0,
+        'tips': 0,
     },
     audio_score: 0
 });
@@ -81,6 +82,7 @@ useEffect(() => {
         0.1 * candidateScores.audio_output.mute_percent +
         0.2 * candidateScores.audio_output.total_filler_words +
         0.2 * candidateScores.audio_output.filler_percent,
+        'tips' : candidateScores.audio_output.tips,
     }
     setPracticeInterviewScore(interview_id, payload)
 })
@@ -262,6 +264,10 @@ return(
 
                                         <div>
                                             <span style={{ fontSize: '1.1rem' }}> % Filler words used: <span style={{ color: 'black' }}> {candidateScores.audio_output.filler_percent} </span></span>
+                                        </div>
+                                        
+                                        <div>
+                                            <span style={{ fontSize: '1.1rem' }}> Tips: <span style={{ color: 'black' }}> {candidateScores.audio_output.tips['content']} </span></span>
                                         </div>
                                     </div>
                                     <span style={{ color: 'red', fontSize: '1.3rem' }}>Audio Score: </span>
