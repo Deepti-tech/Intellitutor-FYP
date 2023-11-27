@@ -21,8 +21,6 @@ const Navbar = (props) => {
 
     const highlightSelectedPage = (selectedPage, accessLevel, loggedIn) => {
         const pageLinkList = Object.values(linkList)
-        // Fileter links with adming access if user doesn't have it.
-
         const finalLinkList = []
 
         for (let index = 0; index < pageLinkList.length; index++) {
@@ -64,12 +62,12 @@ const Navbar = (props) => {
 
 export const linkList = {
     'HOME': { index: 0, text: 'Home', path: '/', access: 'ALL', loginRequired: false },
-    'CANDIDATE_JOBS': { index: 1, text: 'Jobs', path: '/jobs', access: 'CANDIDATE', loginRequired: true },
-    'CANDIDATE_PROFILE': { index: 2, text: 'Profile', path: '/profile', access: 'CANDIDATE', loginRequired: true },
-    'INTERVIEWER_POSTS': { index: 3, text: 'Posted Jobs', path: '/postedJobs', access: 'INTERVIEWER', loginRequired: true },
-    'INTERVIEWER_NEW_OPENING': { index: 4, text: 'Openings', path: '/postOpening', access: 'INTERVIEWER', loginRequired: true },
-    'PRACTICE_INTERVIEW': { index: 5, text: 'Practice Interview', path: '/practiceInterview', access: 'CANDIDATE', loginRequired: true },
-    'DASHBOARD': { index: 6, text: 'Dashboard', path: '/dashboard', access: 'CANDIDATE', loginRequired: true }
+    // 'CANDIDATE_JOBS': { index: 1, text: 'Jobs', path: '/jobs', access: 'CANDIDATE', loginRequired: true },
+    // 'CANDIDATE_PROFILE': { index: 2, text: 'Profile', path: '/profile', access: 'CANDIDATE', loginRequired: true },
+    // 'INTERVIEWER_POSTS': { index: 3, text: 'Posted Jobs', path: '/postedJobs', access: 'INTERVIEWER', loginRequired: true },
+    // 'INTERVIEWER_NEW_OPENING': { index: 4, text: 'Openings', path: '/postOpening', access: 'INTERVIEWER', loginRequired: true },
+    'PRACTICE_INTERVIEW': { index: 1, text: 'Practice Interview', path: '/practiceInterview', access: 'CANDIDATE', loginRequired: true },
+    // 'DASHBOARD': { index: 6, text: 'Dashboard', path: '/dashboard', access: 'CANDIDATE', loginRequired: true }
 }
 
 Object.freeze(linkList)

@@ -44,5 +44,3 @@ python main.py
 vedio_to_text -> line 5
 InterviewerCandidateAnalysis -> line 19
 emotion_analyse -> line 35
-
-checking 
