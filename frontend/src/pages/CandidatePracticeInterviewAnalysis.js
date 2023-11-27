@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Navbar, { linkList } from '../Components/Navbar'
 import { useLocation } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom';
 import { useIsMount, useNotifier } from '../js/utils';
 import angry_image from '../media/angry.gif'
 import happy_image from '../media/happy.gif'
@@ -9,10 +8,6 @@ import neutral_image from '../media/neutral-face.gif'
 import sad from '../media/sad.gif'
 import surprised from '../media/surprised.gif'
 import {
-    getPracticeStreamId, sendBlobData,
-    scheduleCandidatePracticeInterview,
-    getCandidateProfile,
-    analizeCanadidateResume,
     getTaskStatus,
     analizeCanadidateVideo,
     analizeCanadidateAudio,
@@ -39,6 +34,7 @@ const [candidateScores, setCandidateScores] = useState({
         'mute_percent': 0,
         'total_filler_words': 0,
         'filler_percent': 0,
+        'tips': 0,
     },
     audio_score: 0
 });
@@ -50,13 +46,6 @@ const [audioCompleted, setAudioCompleted] = useState(false)
 const REFRESH_INTERVAL = 1500;
 const videoPath = state.videoPath
 const interview_id = state.id
-useEffect(() => {
-    // if (sourceRef.current.src && videoRef.current) {
-    //     sourceRef.current.src = `http://localhost:5000/getInterviewVideo?file_path=${videoPath}`
-    //     videoRef.current.load();
-    // }
-
-}, [videoPath])
 
 useEffect(() => {
     setPercent(Math.round(analysisProgress.processed / Math.max(analysisProgress.frames, 1) * 100))
@@ -93,6 +82,7 @@ useEffect(() => {
         0.1 * candidateScores.audio_output.mute_percent +
         0.2 * candidateScores.audio_output.total_filler_words +
         0.2 * candidateScores.audio_output.filler_percent,
+        'tips' : candidateScores.audio_output.tips,
     }
     setPracticeInterviewScore(interview_id, payload)
 })
@@ -132,9 +122,6 @@ const analizeInterview = async () => {
                 }
             }
         }, REFRESH_INTERVAL);
-
-        // Set Interval counter in state, so that click on button multiple times don't generate new counters,
-        
         console.warn('Interval counter started')
         setIntervalRunning(true)
     }
@@ -151,7 +138,6 @@ const analizeAudio = async () => {
             return
         }
 
-        // Main intervel. Runs every 2 second to check for job status.
         const _intervalCounter = setInterval(async () => {
             setAudioStarted(true);
             const response = await getTaskStatus(notifier, task_id);
@@ -174,8 +160,6 @@ const analizeAudio = async () => {
             }
         }, REFRESH_INTERVAL);
 
-        // Set Interval counter in state, so that click on button multiple times don't generate new counters,
-        // if one counter is already running.
         console.warn('Interval counter started')
         setIntervalRunning(true)
     }
@@ -188,8 +172,6 @@ return(
         <div className='page-container'>
         <span style={{ color: 'var(--ui-color)', fontSize: '1.4rem', fontWeight: 'bold', padding: '10px' }}>
                 Prepare to Shine!</span>
-            {/* <div className='interview-list-container'>
-                <div className='interview-item'> */}
                 <div className='video-container visible' style={{ border: '2px solid black', marginTop: '20px' }}>
                     <video width='480' height='360' controls ref={videoRef}>
                         <source src={`http://localhost:5000/getInterviewVideo?file_path=${videoPath}`} ref={sourceRef} />
@@ -283,6 +265,10 @@ return(
                                         <div>
                                             <span style={{ fontSize: '1.1rem' }}> % Filler words used: <span style={{ color: 'black' }}> {candidateScores.audio_output.filler_percent} </span></span>
                                         </div>
+                                        
+                                        <div>
+                                            <span style={{ fontSize: '1.1rem' }}> Tips: <span style={{ color: 'black' }}> {candidateScores.audio_output.tips['content']} </span></span>
+                                        </div>
                                     </div>
                                     <span style={{ color: 'red', fontSize: '1.3rem' }}>Audio Score: </span>
                                     <span style={{ fontSize: '1.3rem' }}>{Math.round((0.2 * candidateScores.audio_output.wpm +
@@ -301,9 +287,6 @@ return(
                 </div>
             </div>
                 </div>
-            
-    //     </div>
-    // </div> 
 )
 }
 export default CandidatePracticeInterviewAnalysis
