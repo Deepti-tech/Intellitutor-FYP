@@ -34,7 +34,6 @@ const [candidateScores, setCandidateScores] = useState({
         'mute_percent': 0,
         'total_filler_words': 0,
         'filler_percent': 0,
-        'tips': 0,
     },
     audio_score: 0
 });
@@ -42,7 +41,9 @@ const sourceRef = useRef();
 const videoRef = useRef();
 const [interviewAnalStarted, setInterviewAnalStarted] = useState(false);
 const [audioStarted, setAudioStarted] = useState(false);
+const [tipsGenStarted, settipsGenStarted] = useState(false);
 const [audioCompleted, setAudioCompleted] = useState(false)
+const [tipsGenCompleted, settipsGenCompleted] = useState(false)
 const REFRESH_INTERVAL = 1500;
 const videoPath = state.videoPath
 const interview_id = state.id
@@ -82,7 +83,6 @@ useEffect(() => {
         0.1 * candidateScores.audio_output.mute_percent +
         0.2 * candidateScores.audio_output.total_filler_words +
         0.2 * candidateScores.audio_output.filler_percent,
-        'tips' : candidateScores.audio_output.tips,
     }
     setPracticeInterviewScore(interview_id, payload)
 })
@@ -95,8 +95,6 @@ const analizeInterview = async () => {
             console.error("Task couldn't be created.")
             return
         }
-
-        // Main intervel. Runs every 2 second to check for job status.
         const _intervalCounter = setInterval(async () => {
             setInterviewAnalStarted(true);
             const response = await getTaskStatus(notifier, task_id);
@@ -163,8 +161,42 @@ const analizeAudio = async () => {
         console.warn('Interval counter started')
         setIntervalRunning(true)
     }
-    
+}
+const [tipsResult, setTipsResult] = useState('');
+const GetTips=async()=>{
+    const url = 'https://chatgpt53.p.rapidapi.com/';
+    const query1 = "I gave a practice interview. Act as if you took my interview and following are details. My speaking speed was"+ candidateScores.audio_output.speed +"word per minute(wpm) was" + candidateScores.audio_output.wpm+"The initial pause was"+candidateScores.audio_output.initial_pause_percent+"and my pause percentage was" +candidateScores.audio_output.mute_percent+". I used"+candidateScores.audio_output.total_filler_words+" filler words and my filler percentage is"+ candidateScores.audio_output.filler_percent
+    const query2 = "Following are the number of frames for each emotions I displayed (do not use the word 'frames' in reply) 1.Happy: "+analysisProgress.label.Happy+"2. Sad: "+analysisProgress.label.Sad+"3. Angry:"+analysisProgress.label.Angry+"4.Surprise:"+analysisProgress.label.Surprise+"5.Neutral:"+analysisProgress.label.Neutral +" Tell me my strong points and how to improve on weak areas precisely in 5-7 lines.";
+    const query = query1 + query2;
+    settipsGenStarted(true);
+    const requestBody = {
+        messages: [
+            {
+                role: 'user',
+                content: query
+            }
+        ],
+        temperature: 1
+    };
+    const options = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            'X-RapidAPI-Key': 'a14f617fb1msh89e622aa1bd10b6p1ffd6bjsn35710cd2365c',
+            'X-RapidAPI-Host': 'chatgpt53.p.rapidapi.com'
+        },
+        body: JSON.stringify(requestBody)
+    };
 
+    try {
+        const response = await fetch(url, options);
+        settipsGenCompleted(true)
+        const data = await response.json(true); 
+        const message = data.choices[0]?.message?.content || 'You are all set.'; 
+        setTipsResult(message); 
+    } catch (error) {
+        console.error(error);
+    }
 }
 return(
     <div className='page-wrapper'>
@@ -265,10 +297,6 @@ return(
                                         <div>
                                             <span style={{ fontSize: '1.1rem' }}> % Filler words used: <span style={{ color: 'black' }}> {candidateScores.audio_output.filler_percent} </span></span>
                                         </div>
-                                        
-                                        <div>
-                                            <span style={{ fontSize: '1.1rem' }}> Tips: <span style={{ color: 'black' }}> {candidateScores.audio_output.tips['content']} </span></span>
-                                        </div>
                                     </div>
                                     <span style={{ color: 'red', fontSize: '1.3rem' }}>Audio Score: </span>
                                     <span style={{ fontSize: '1.3rem' }}>{Math.round((0.2 * candidateScores.audio_output.wpm +
@@ -276,14 +304,32 @@ return(
                         0.1 * candidateScores.audio_output.mute_percent +
                         0.2 * candidateScores.audio_output.total_filler_words +
                         0.2 * candidateScores.audio_output.filler_percent))}</span>
-
                                 </div>
                             </div>
-
                         }
-
                     </div>
 
+                    <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
+                        <button className='custom-blue'  onClick={GetTips} style={{width:'130px'}}> Get Tips</button>
+
+                        {
+                            ((tipsGenStarted && (!tipsGenCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Generating tips ...</span>
+                        }
+
+                        {
+                            (tipsGenCompleted) &&
+                            <div className='interview-analysis' >
+                                <div style={{ alignSelf: 'stretch' }}>
+
+                                    <div className='audio-result-container'>                                       
+                                        <div>
+                                            <span style={{ fontSize: '1.1rem' }}> Tips: <span style={{ color: 'black' }}> {tipsResult} </span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
                 </div>
