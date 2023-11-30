@@ -41,7 +41,7 @@ def speech_speed(audio_path, speech_text):
     duration_min = frames / (rate * 60)
     wpm = word_count / duration_min
     speed = 'Slow'
-    if wpm > 120 and wpm <= 160:
+    if wpm > 80 and wpm <= 160:
         speed = 'Medium'
     elif (wpm > 160):
         speed = 'Fast'
