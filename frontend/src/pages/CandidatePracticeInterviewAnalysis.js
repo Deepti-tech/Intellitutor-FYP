@@ -163,37 +163,40 @@ const analizeAudio = async () => {
     }
 }
 const [tipsResult, setTipsResult] = useState('');
-const GetTips=async()=>{
-    const url = 'https://chatgpt53.p.rapidapi.com/';
-    const query1 = "I gave a practice interview. Act as if you took my interview and following are details. My speaking speed was"+ candidateScores.audio_output.speed +"word per minute(wpm) was" + candidateScores.audio_output.wpm+"The initial pause was"+candidateScores.audio_output.initial_pause_percent+"and my pause percentage was" +candidateScores.audio_output.mute_percent+". I used"+candidateScores.audio_output.total_filler_words+" filler words and my filler percentage is"+ candidateScores.audio_output.filler_percent
-    const query2 = "Following are the number of frames for each emotions I displayed (do not use the word 'frames' in reply) 1.Happy: "+analysisProgress.label.Happy+"2. Sad: "+analysisProgress.label.Sad+"3. Angry:"+analysisProgress.label.Angry+"4.Surprise:"+analysisProgress.label.Surprise+"5.Neutral:"+analysisProgress.label.Neutral +" Tell me my strong points and how to improve on weak areas precisely in 5-7 lines.";
+const GetTips = async () => {
+    const url = 'https://chatgpt-42.p.rapidapi.com/conversationgpt4';
+    const query1 = "I gave a practice interview. Act as if you took my interview and following are details. My speaking speed was" + candidateScores.audio_output.speed + "word per minute(wpm) was" + candidateScores.audio_output.wpm + "The initial pause was" + candidateScores.audio_output.initial_pause_percent + "and my pause percentage was" + candidateScores.audio_output.mute_percent + ". I used" + candidateScores.audio_output.total_filler_words + " filler words and my filler percentage is" + candidateScores.audio_output.filler_percent;
+    const query2 = "Following are the number of frames for each emotions I displayed (do not use the word 'frames' in reply) 1.Happy: " + analysisProgress.label.Happy + "2. Sad: " + analysisProgress.label.Sad + "3. Angry:" + analysisProgress.label.Angry + "4.Surprise:" + analysisProgress.label.Surprise + "5.Neutral:" + analysisProgress.label.Neutral + " Tell me my strong points and how to improve on weak areas precisely in 5-7 lines.";
     const query = query1 + query2;
     settipsGenStarted(true);
-    const requestBody = {
-        messages: [
-            {
-                role: 'user',
-                content: query
-            }
-        ],
-        temperature: 1
-    };
     const options = {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
-            'X-RapidAPI-Key': 'a14f617fb1msh89e622aa1bd10b6p1ffd6bjsn35710cd2365c',
-            'X-RapidAPI-Host': 'chatgpt53.p.rapidapi.com'
+            'X-RapidAPI-Key': 'e95bd5207emsh57746e4debc5426p175cf8jsn6fb4c4a58bf6',
+            'X-RapidAPI-Host': 'chatgpt-42.p.rapidapi.com',
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify({
+            messages: [
+                {
+                    role: 'user',
+                    content: query
+                }
+            ],
+            system_prompt: '',
+            temperature: 0.5,
+            top_k: 50,
+            top_p: 0.9,
+            max_tokens: 200
+        })
     };
 
     try {
         const response = await fetch(url, options);
-        settipsGenCompleted(true)
-        const data = await response.json(true); 
-        const message = data.choices[0]?.message?.content || 'You are all set.'; 
-        setTipsResult(message); 
+        settipsGenCompleted(true);
+        const jsonResponse = await response.json();
+        const { result } = jsonResponse;
+        setTipsResult(result); 
     } catch (error) {
         console.error(error);
     }
