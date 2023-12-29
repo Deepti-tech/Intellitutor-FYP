@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Navbar, { linkList } from '../Components/Navbar'
-import InputBox from '../Components/InputBox';
 import { useNavigate } from 'react-router-dom';
 import { useNotifier } from '../js/utils';
 import {
     getPracticeStreamId, sendBlobData,
     scheduleCandidatePracticeInterview
 } from '../js/httpHandler';
-
+import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 var videoPath, id
 
 const CandidatePracticeInterview = ({ }) => {
@@ -15,11 +14,12 @@ const CandidatePracticeInterview = ({ }) => {
     const [permissionGranted, setPermissionGranted] = useState(false);
     const [mediaRecorder, setMediaRecorder] = useState(null);
     const [streamId, setStreamId] = useState('');
-    
+    const [userRole, setUserRole] = useState('');
     const videoFrameRef = useRef();
     const notifier = useNotifier();
     const navigate = useNavigate();
-     
+    const [runExecuted, setRunExecuted] = useState(false);
+
     const [isRecording, setIsRecording] = useState(false);
 
     const send_blobs = async (blob_data) => {
@@ -29,7 +29,9 @@ const CandidatePracticeInterview = ({ }) => {
             throw new Error('Stream Id not present')
         }
     }
-    
+    const handleRoleInputChange = (event) => {
+        setUserRole(event.target.value); 
+    };
     const schedulePracticeInterview = async () => {
         const payload = {
           'time': parseInt(Date.parse(new Date) / 1000) + 18000,
@@ -41,7 +43,8 @@ const CandidatePracticeInterview = ({ }) => {
         }
         id = response
         allowRecording()
-        videoPath = 'uploads/' + id + '.webm'
+        videoPath = 'uploads/' + id + '.webm';
+        run();
       }
 
     useEffect(() => {
@@ -89,6 +92,22 @@ const CandidatePracticeInterview = ({ }) => {
         }
         return navigate('/practiceInterviewAnalysis', {state: {videoPath: videoPath, id: id}});
     };
+    const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
+    const [Questions, setQuestions] = useState('');
+    const run = async () => {
+        if (!runExecuted) {
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+console.log(userRole);
+            const prompt = "Assume you are an interviewer. Ask 5 questions based on the role: " + userRole + " to a candidate. Do not give answers. Avoid using this ** ";
+
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
+            console.log(text);
+            setQuestions(text);
+            setRunExecuted(true);
+        }
+    };
 
     return (
         <div className='page-wrapper'>
@@ -100,13 +119,24 @@ const CandidatePracticeInterview = ({ }) => {
                     <div className='interview-item'>
                     <div id='role_info'>
                         <span style={{ fontSize: '1.2rem', fontWeight: '600' }}>Enter the role you are preparing for...</span>
-                        <InputBox style={{ height: '35px' }} clsName='custom-input-style' />
-                        {/* <InputBox style={{ height: '35px' }} clsName='custom-input-style' ref={refs.DESIGNATION} /> */}
+                        <input type="text" style={{ height: '35px', width: '95%' }}  value={userRole} onChange={handleRoleInputChange}/>
                     </div>
-                    <div id='questions' style={{display: 'none'}}>
-                        <span style={{ fontSize: '1.2rem', fontWeight: '600' }}>Questions...</span>
-                        
+                    <div id='questions' style={{display: 'none', fontSize: '1.2rem', fontWeight: '600'}}>
+                    {Questions.split('\n').map((line, index) => (
+                        <div key={index} style={{ fontSize: '1rem', fontWeight: '500' }}>
+                            {line}
+                        </div>
+                    ))}
                     </div>
+                    {/* <div id='questions' style={{ display: 'none' }}>
+                        {Questions.split('\n').map((line, index) => (
+                            <React.Fragment key={index}>
+                                {line}
+                                <br />
+                            </React.Fragment>
+                        ))}
+                    </div> */}
+                    
                     {(!permissionGranted) &&
                         <>
                             <button className="custom-purple" style={{ float: 'right', marginRight: '20px', marginTop: '5px' }} onClick={schedulePracticeInterview}> Start</button>
