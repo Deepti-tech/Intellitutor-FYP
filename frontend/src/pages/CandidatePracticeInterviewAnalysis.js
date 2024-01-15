@@ -13,6 +13,7 @@ import {
     analizeCanadidateAudio,
     setPracticeInterviewScore
 } from '../js/httpHandler';
+import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
 const CandidatePracticeInterviewAnalysis = ({}) => {
     const { state } = useLocation();
@@ -163,43 +164,60 @@ const analizeAudio = async () => {
     }
 }
 const [tipsResult, setTipsResult] = useState('');
+const [runExecuted, setRunExecuted] = useState(false);
+
 const GetTips = async () => {
-    const url = 'https://chatgpt-42.p.rapidapi.com/conversationgpt4';
+    // const url = 'https://chatgpt-42.p.rapidapi.com/conversationgpt4';
     const query1 = "I gave a practice interview. Act as if you took my interview and following are details. My speaking speed was" + candidateScores.audio_output.speed + "word per minute(wpm) was" + candidateScores.audio_output.wpm + "The initial pause was" + candidateScores.audio_output.initial_pause_percent + "and my pause percentage was" + candidateScores.audio_output.mute_percent + ". I used" + candidateScores.audio_output.total_filler_words + " filler words and my filler percentage is" + candidateScores.audio_output.filler_percent;
     const query2 = "Following are the number of frames for each emotions I displayed (do not use the word 'frames' in reply) 1.Happy: " + analysisProgress.label.Happy + "2. Sad: " + analysisProgress.label.Sad + "3. Angry:" + analysisProgress.label.Angry + "4.Surprise:" + analysisProgress.label.Surprise + "5.Neutral:" + analysisProgress.label.Neutral + " Tell me my strong points and how to improve on weak areas precisely in 5-7 lines.";
     const query = query1 + query2;
     settipsGenStarted(true);
-    const options = {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            'X-RapidAPI-Key': 'e95bd5207emsh57746e4debc5426p175cf8jsn6fb4c4a58bf6',
-            'X-RapidAPI-Host': 'chatgpt-42.p.rapidapi.com',
-        },
-        body: JSON.stringify({
-            messages: [
-                {
-                    role: 'user',
-                    content: query
-                }
-            ],
-            system_prompt: '',
-            temperature: 0.5,
-            top_k: 50,
-            top_p: 0.9,
-            max_tokens: 200
-        })
-    };
+    // const options = {
+    //     method: 'POST',
+    //     headers: {
+    //         'content-type': 'application/json',
+    //         'X-RapidAPI-Key': 'e95bd5207emsh57746e4debc5426p175cf8jsn6fb4c4a58bf6',
+    //         'X-RapidAPI-Host': 'chatgpt-42.p.rapidapi.com',
+    //     },
+    //     body: JSON.stringify({
+    //         messages: [
+    //             {
+    //                 role: 'user',
+    //                 content: query
+    //             }
+    //         ],
+    //         system_prompt: '',
+    //         temperature: 0.5,
+    //         top_k: 50,
+    //         top_p: 0.9,
+    //         max_tokens: 200
+    //     })
+    // };
 
-    try {
-        const response = await fetch(url, options);
-        settipsGenCompleted(true);
-        const jsonResponse = await response.json();
-        const { result } = jsonResponse;
-        setTipsResult(result); 
-    } catch (error) {
-        console.error(error);
-    }
+    // try {
+    //     const response = await fetch(url, options);
+    //     settipsGenCompleted(true);
+    //     const jsonResponse = await response.json();
+    //     const { result } = jsonResponse;
+    //     setTipsResult(result); 
+    // } catch (error) {
+    //     console.error(error);
+    // }
+    const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
+    // const run = async () => {
+        if (!runExecuted) {
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            const prompt = query;
+
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
+            console.log(text);
+            settipsGenCompleted(true);
+            setTipsResult(text); 
+            setRunExecuted(true);
+        }
+    // };
 }
 return(
     <div className='page-wrapper'>
@@ -323,10 +341,17 @@ return(
                             (tipsGenCompleted) &&
                             <div className='interview-analysis' >
                                 <div style={{ alignSelf: 'stretch' }}>
-
+                                <span style={{ fontSize: '1.3rem', textDecoration: 'underlined' }} > Tips: </span>
                                     <div className='audio-result-container'>                                       
                                         <div>
-                                            <span style={{ fontSize: '1.1rem' }}> Tips: <span style={{ color: 'black' }}> {tipsResult} </span></span>
+                                        
+                                         <span style={{ color: 'black' }}> 
+                                            {tipsResult.split('\n').map((line, index) => (
+                                            <div key={index} style={{ fontSize: '1.1rem' }}>
+                                            {line.replace(/\*\*/g, '')}
+                                        </div>
+                                        ))}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
