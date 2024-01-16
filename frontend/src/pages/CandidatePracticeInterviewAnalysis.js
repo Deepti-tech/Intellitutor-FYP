@@ -14,7 +14,6 @@ import {
     setPracticeInterviewScore
 } from '../js/httpHandler';
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-
 const CandidatePracticeInterviewAnalysis = ({}) => {
     const { state } = useLocation();
     const notifier = useNotifier();
@@ -43,8 +42,10 @@ const videoRef = useRef();
 const [interviewAnalStarted, setInterviewAnalStarted] = useState(false);
 const [audioStarted, setAudioStarted] = useState(false);
 const [tipsGenStarted, settipsGenStarted] = useState(false);
+const [AnsCorrectionStarted, setAnsCorrectionStarted] = useState(false);
 const [audioCompleted, setAudioCompleted] = useState(false)
 const [tipsGenCompleted, settipsGenCompleted] = useState(false)
+const [AnsCorrectionCompleted, setAnsCorrectionCompleted] = useState(false)
 const REFRESH_INTERVAL = 1500;
 const videoPath = state.videoPath
 const interview_id = state.id
@@ -219,6 +220,11 @@ const GetTips = async () => {
         }
     // };
 }
+const answerAnalysis = async() =>{
+   setAnsCorrectionStarted(true);
+   setAnsCorrectionCompleted(true);
+   
+}
 return(
     <div className='page-wrapper'>
         <Navbar selectedPage={linkList.PRACTICE_INTERVIEW} />
@@ -353,6 +359,26 @@ return(
                                         ))}
                                             </span>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
+                        <button className='custom-blue'  onClick={answerAnalysis} style={{width:'130px'}}> Answer Analysis</button>
+
+                        {
+                            ((AnsCorrectionStarted && (!AnsCorrectionCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Generating tips ...</span>
+                        }
+
+                        {
+                            (AnsCorrectionCompleted) &&
+                            <div className='interview-analysis' >
+                                <div style={{ alignSelf: 'stretch' }}>
+                                <span style={{ fontSize: '1.3rem', textDecoration: 'underlined' }} > Tips: </span>
+                                    <div className='audio-result-container'>                                       
+                                       
                                     </div>
                                 </div>
                             </div>
