@@ -14,10 +14,11 @@ import {
     setPracticeInterviewScore
 } from '../js/httpHandler';
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+import textfile from '../audio.txt';
 const CandidatePracticeInterviewAnalysis = ({}) => {
     const { state } = useLocation();
     const notifier = useNotifier();
-    const { username, job_id, role } = (state && state.username) ? state : { username: '', job_id: '', role: '' }
+    // const { username, job_id, role } = (state && state.username) ? state : { username: '', job_id: '', role: '' }
     const [intervalRunning, setIntervalRunning] = useState(false);
     const [analysisProgress, setAnalysisProgress] = useState({
     'label': { 'Angry': 0, 'Happy': 0, 'Neutral': 0, 'Sad': 0, 'Surprise': 0 },
@@ -49,6 +50,8 @@ const [AnsCorrectionCompleted, setAnsCorrectionCompleted] = useState(false)
 const REFRESH_INTERVAL = 1500;
 const videoPath = state.videoPath
 const interview_id = state.id
+const role = state.role
+const questions = state.questions
 
 useEffect(() => {
     setPercent(Math.round(analysisProgress.processed / Math.max(analysisProgress.frames, 1) * 100))
@@ -165,7 +168,9 @@ const analizeAudio = async () => {
     }
 }
 const [tipsResult, setTipsResult] = useState('');
+const [answerResult, setanswerResult] = useState('');
 const [runExecuted, setRunExecuted] = useState(false);
+const [run1Executed, setRun1Executed] = useState(false);
 
 const GetTips = async () => {
     // const url = 'https://chatgpt-42.p.rapidapi.com/conversationgpt4';
@@ -220,9 +225,33 @@ const GetTips = async () => {
         }
     // };
 }
+const [answers, setText] = React.useState();
+useEffect(() => {    
+  fetch(textfile)
+    .then((response) => response.text())
+    .then((textContent) => {
+      setText(textContent);
+    });
+  }, []);
 const answerAnalysis = async() =>{
    setAnsCorrectionStarted(true);
-   setAnsCorrectionCompleted(true);
+   const query1 = "I had an interview,the role was:"+role+"the 5 questions asked are:"+questions+"And the answers I gave are:"+answers
+   const query2 = "Check the answers, each question holds 20 points. Identify if the answers are right or wrong answers (if wrong then why), areas of improvement and the score. Use the word you for explaining"
+   const query = query1 + query2
+   const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
+    // const run = async () => {
+        if (!run1Executed) {
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            const prompt = query;
+
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
+            console.log(text);
+            setAnsCorrectionCompleted(true);
+            setanswerResult(text); 
+            setRun1Executed(true);
+        }
    
 }
 return(
@@ -369,7 +398,7 @@ return(
                         <button className='custom-blue'  onClick={answerAnalysis} style={{width:'130px'}}> Answer Analysis</button>
 
                         {
-                            ((AnsCorrectionStarted && (!AnsCorrectionCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Generating tips ...</span>
+                            ((AnsCorrectionStarted && (!AnsCorrectionCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Evaluating your answers ...</span>
                         }
 
                         {
@@ -378,7 +407,19 @@ return(
                                 <div style={{ alignSelf: 'stretch' }}>
                                 <span style={{ fontSize: '1.3rem', textDecoration: 'underlined' }} > Tips: </span>
                                     <div className='audio-result-container'>                                       
-                                       
+                                    <div>
+                                        <span style={{ color: 'black' }}> 
+                                           {answerResult.split('\n').map((line, index) => (
+                                           <div key={index} style={{ fontSize: '1.1rem' }}>
+                                            
+                                            <React.Fragment key={index}>
+                                            {line.replace(/\*/g, '')}
+                                            <br />
+                                        </React.Fragment>
+                                            </div>
+                                       ))}
+                                           </span>
+                                       </div>
                                     </div>
                                 </div>
                             </div>

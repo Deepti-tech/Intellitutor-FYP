@@ -90,7 +90,7 @@ const CandidatePracticeInterview = ({ }) => {
             mediaRecorder.stop();
             setIsRecording(false); 
         }
-        return navigate('/practiceInterviewAnalysis', {state: {videoPath: videoPath, id: id}});
+        return navigate('/practiceInterviewAnalysis', {state: {videoPath: videoPath, id: id, role: userRole, questions: Questions}});
     };
     const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
     const [Questions, setQuestions] = useState('');
