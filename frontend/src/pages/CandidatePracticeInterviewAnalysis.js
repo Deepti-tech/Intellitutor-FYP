@@ -173,44 +173,11 @@ const [runExecuted, setRunExecuted] = useState(false);
 const [run1Executed, setRun1Executed] = useState(false);
 
 const GetTips = async () => {
-    // const url = 'https://chatgpt-42.p.rapidapi.com/conversationgpt4';
     const query1 = "I gave a practice interview. Act as if you took my interview and following are details. My speaking speed was" + candidateScores.audio_output.speed + "word per minute(wpm) was" + candidateScores.audio_output.wpm + "The initial pause was" + candidateScores.audio_output.initial_pause_percent + "and my pause percentage was" + candidateScores.audio_output.mute_percent + ". I used" + candidateScores.audio_output.total_filler_words + " filler words and my filler percentage is" + candidateScores.audio_output.filler_percent;
     const query2 = "Following are the number of frames for each emotions I displayed (do not use the word 'frames' in reply) 1.Happy: " + analysisProgress.label.Happy + "2. Sad: " + analysisProgress.label.Sad + "3. Angry:" + analysisProgress.label.Angry + "4.Surprise:" + analysisProgress.label.Surprise + "5.Neutral:" + analysisProgress.label.Neutral + " Tell me my strong points and how to improve on weak areas precisely in 5-7 lines.";
     const query = query1 + query2;
     settipsGenStarted(true);
-    // const options = {
-    //     method: 'POST',
-    //     headers: {
-    //         'content-type': 'application/json',
-    //         'X-RapidAPI-Key': 'e95bd5207emsh57746e4debc5426p175cf8jsn6fb4c4a58bf6',
-    //         'X-RapidAPI-Host': 'chatgpt-42.p.rapidapi.com',
-    //     },
-    //     body: JSON.stringify({
-    //         messages: [
-    //             {
-    //                 role: 'user',
-    //                 content: query
-    //             }
-    //         ],
-    //         system_prompt: '',
-    //         temperature: 0.5,
-    //         top_k: 50,
-    //         top_p: 0.9,
-    //         max_tokens: 200
-    //     })
-    // };
-
-    // try {
-    //     const response = await fetch(url, options);
-    //     settipsGenCompleted(true);
-    //     const jsonResponse = await response.json();
-    //     const { result } = jsonResponse;
-    //     setTipsResult(result); 
-    // } catch (error) {
-    //     console.error(error);
-    // }
     const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
-    // const run = async () => {
         if (!runExecuted) {
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
             const prompt = query;
@@ -223,7 +190,6 @@ const GetTips = async () => {
             setTipsResult(text); 
             setRunExecuted(true);
         }
-    // };
 }
 const [answers, setText] = React.useState();
 useEffect(() => {    
@@ -239,7 +205,6 @@ const answerAnalysis = async() =>{
    const query2 = "Check the answers, each question holds 20 points. Identify if the answers are right or wrong answers (if wrong then why), areas of improvement and the score. Use the word you for explaining"
    const query = query1 + query2
    const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
-    // const run = async () => {
         if (!run1Executed) {
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
             const prompt = query;
@@ -265,8 +230,6 @@ return(
                         <source src={`http://localhost:5000/getInterviewVideo?file_path=${videoPath}`} ref={sourceRef} />
                     </video>
                 </div>
-
-
                 <div className='ai-action-section'>
                     <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
                         <button className='custom-blue' style={{width:'130px'}} onClick={analizeInterview}> Analize Interview</button>
@@ -276,8 +239,6 @@ return(
                                 <div style={{ alignSelf: 'flex-start' }}>
                                     Frames Processed: {analysisProgress.processed}/ {analysisProgress.frames}
                                 </div>
-
-
                                 <div className='emoji-container' >
                                     <img height={60} width={60} src={happy_image} />
                                     <span style={{ fontSize: '1.8rem' }}>{analysisProgress.label.Happy}</span>
@@ -316,7 +277,6 @@ return(
 
                     <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
                         <button className='custom-blue'  onClick={analizeAudio} style={{width:'130px'}}> Analize Speech</button>
-
                         {
                             ((audioStarted && (!audioCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Analyzing Audio ...</span>
                         }
@@ -395,7 +355,7 @@ return(
                     </div>
 
                     <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
-                        <button className='custom-blue'  onClick={answerAnalysis} style={{width:'130px'}}> Answer Analysis</button>
+                        <button className='custom-blue'  onClick={answerAnalysis} style={{width:'130px'}}>Analize Answers</button>
 
                         {
                             ((AnsCorrectionStarted && (!AnsCorrectionCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Evaluating your answers ...</span>
@@ -405,19 +365,18 @@ return(
                             (AnsCorrectionCompleted) &&
                             <div className='interview-analysis' >
                                 <div style={{ alignSelf: 'stretch' }}>
-                                <span style={{ fontSize: '1.3rem', textDecoration: 'underlined' }} > Tips: </span>
+                                <span style={{ fontSize: '1.3rem', textDecoration: 'underlined' }} > Answer Analysis </span>
                                     <div className='audio-result-container'>                                       
                                     <div>
                                         <span style={{ color: 'black' }}> 
                                            {answerResult.split('\n').map((line, index) => (
-                                           <div key={index} style={{ fontSize: '1.1rem' }}>
-                                            
+                                           <div key={index} style={{ fontSize: '1.1rem' }}> 
                                             <React.Fragment key={index}>
                                             {line.replace(/\*/g, '')}
                                             <br />
-                                        </React.Fragment>
+                                            </React.Fragment>
                                             </div>
-                                       ))}
+                                            ))}
                                            </span>
                                        </div>
                                     </div>

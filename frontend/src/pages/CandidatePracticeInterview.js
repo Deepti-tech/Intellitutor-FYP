@@ -112,6 +112,7 @@ const CandidatePracticeInterview = ({ }) => {
             <div className='page-container'>
             <span style={{ color: 'var(--ui-color)', fontSize: '1.4rem', fontWeight: 'bold', padding: '10px' }}>
                     Prepare to Shine!</span>
+                    <><span style={{fontSize: '1.2rem', fontWeight: '600'}}>Role: {userRole}</span></>
                 <div className='interview-list-container'>
                     <div className='interview-item'>
                     <div id='role_info'>
@@ -125,14 +126,6 @@ const CandidatePracticeInterview = ({ }) => {
                         </div>
                     ))}
                     </div>
-                    {/* <div id='questions' style={{ display: 'none' }}>
-                        {Questions.split('\n').map((line, index) => (
-                            <React.Fragment key={index}>
-                                {line}
-                                <br />
-                            </React.Fragment>
-                        ))}
-                    </div> */}
                     
                     {(!permissionGranted) &&
                         <>
