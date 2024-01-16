@@ -229,11 +229,13 @@ def get_plot(username):
     mute_percent=[]
     total_filler_words=[]
     filler_percent=[]
+    answerData = []
     result = mongo.user_practice_interviews.find({'candidate': username})
     result = convert_cursor(result)
     for res in result:
         audioData.append(res['audio_score'])
         videoData.append(res['video_score'])
+        answerData.append(res['answer_score'])
         Happy.append(res['Happy'])
         Sad.append(res['Sad'])
         Neutral.append(res['Neutral'])
@@ -247,6 +249,7 @@ def get_plot(username):
     data = {
         'audioData': audioData,
         "videoData": videoData,
+        "answerData": answerData,
         "Happy": Happy,
         "Sad": Sad,
         "Angry": Angry,
