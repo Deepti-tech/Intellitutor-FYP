@@ -67,7 +67,7 @@ export const linkList = {
     // 'INTERVIEWER_POSTS': { index: 3, text: 'Posted Jobs', path: '/postedJobs', access: 'INTERVIEWER', loginRequired: true },
     // 'INTERVIEWER_NEW_OPENING': { index: 4, text: 'Openings', path: '/postOpening', access: 'INTERVIEWER', loginRequired: true },
     'PRACTICE_INTERVIEW': { index: 2, text: 'Practice Interview', path: '/practiceInterview', access: 'CANDIDATE', loginRequired: true },
-    // 'DASHBOARD': { index: 6, text: 'Dashboard', path: '/dashboard', access: 'CANDIDATE', loginRequired: true }
+    'DASHBOARD': { index: 3, text: 'Dashboard', path: '/dashboard', access: 'CANDIDATE', loginRequired: true }
 }
 
 Object.freeze(linkList)

@@ -36,7 +36,8 @@ const [candidateScores, setCandidateScores] = useState({
         'total_filler_words': 0,
         'filler_percent': 0,
     },
-    audio_score: 0
+    audio_score: 0,
+    answer_score: 0
 });
 const sourceRef = useRef();
 const videoRef = useRef();
@@ -88,6 +89,7 @@ useEffect(() => {
         0.1 * candidateScores.audio_output.mute_percent +
         0.2 * candidateScores.audio_output.total_filler_words +
         0.2 * candidateScores.audio_output.filler_percent,
+        'answer_score': candidateScores.answer_score,
     }
     setPracticeInterviewScore(interview_id, payload)
 })
@@ -185,7 +187,6 @@ const GetTips = async () => {
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const text = response.text();
-            console.log(text);
             settipsGenCompleted(true);
             setTipsResult(text); 
             setRunExecuted(true);
@@ -202,7 +203,7 @@ useEffect(() => {
 const answerAnalysis = async() =>{
    setAnsCorrectionStarted(true);
    const query1 = "I had an interview,the role was:"+role+"the 5 questions asked are:"+questions+"And the answers I gave are:"+answers
-   const query2 = "Check the answers, each question holds 20 points. Identify if the answers are right or wrong answers (if wrong then why), areas of improvement and the score. Use the word you for explaining"
+   const query2 = "Check the answers, each question holds 20 points. Identify if the answer is right or wrong answer (if wrong then why), areas of improvement and the score. Use the word you for explaining"
    const query = query1 + query2
    const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
         if (!run1Executed) {
@@ -212,13 +213,30 @@ const answerAnalysis = async() =>{
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const text = response.text();
-            console.log(text);
             setAnsCorrectionCompleted(true);
             setanswerResult(text); 
             setRun1Executed(true);
         }
-   
 }
+const [setScore, setScoreDone] = useState(false)
+useEffect(() =>{
+    if(run1Executed & !setScore){
+        const scoreMatch = answerResult.match(/(\d+)\/100/);
+        if (scoreMatch) {
+        const score = scoreMatch[1]; 
+        setCandidateScores({...candidateScores, answer_score: (score)})
+        setScoreDone(true)
+        } else{
+            const scoreMatch = answerResult.match(/(\d+)out of 100/);
+            if (scoreMatch) {
+                const score = scoreMatch[1]; 
+                setCandidateScores({...candidateScores, answer_score: (score)})
+                setScoreDone(true)
+                } else{
+                console.log("Score not found in the sentence.")}
+        }
+    }
+})
 return(
     <div className='page-wrapper'>
         <Navbar selectedPage={linkList.PRACTICE_INTERVIEW} />

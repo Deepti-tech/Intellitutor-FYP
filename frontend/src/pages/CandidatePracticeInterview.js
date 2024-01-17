@@ -102,7 +102,6 @@ const CandidatePracticeInterview = ({ }) => {
             const response = await result.response;
             const text = response.text();
             setQuestions(text);
-            // console.log(text)
             setRunExecuted(true);
         }
     };
