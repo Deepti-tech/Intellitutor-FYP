@@ -323,3 +323,13 @@ export const analizeCanadidateAudio = async (notifier, video_path) => {
     return resp.response
 
 }
+export const createTextFile = async (notifier, video_path) => {
+    const resp = await GetRequest('/createTextFile', { 'filePath':  video_path})
+    if (!resp.status) {
+        if (resp.msg)
+            notifier(resp.msg)
+        return ''
+    }
+    return resp.response
+
+}

@@ -11,7 +11,9 @@ import {
     getTaskStatus,
     analizeCanadidateVideo,
     analizeCanadidateAudio,
-    setPracticeInterviewScore
+
+    setPracticeInterviewScore,
+    createTextFile
 } from '../js/httpHandler';
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 import textfile from '../audio.txt';
@@ -201,22 +203,54 @@ useEffect(() => {
     });
   }, []);
 const answerAnalysis = async() =>{
-   setAnsCorrectionStarted(true);
-   const query1 = "I had an interview,the role was:"+role+"the 5 questions asked are:"+questions+"And the answers I gave are:"+answers
-   const query2 = "Check the answers, each question holds 20 points. Identify if the answer is right or wrong answer (if wrong then why), areas of improvement and the score. Use the word you for explaining"
-   const query = query1 + query2
-   const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
-        if (!run1Executed) {
-            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-            const prompt = query;
-
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const text = response.text();
-            setAnsCorrectionCompleted(true);
-            setanswerResult(text); 
-            setRun1Executed(true);
+    if (!intervalRunning) {
+        const task_id = await createTextFile(notifier, videoPath);
+        if (!task_id) {
+            console.error("Task couldn't be created.")
+            return
         }
+
+        const _intervalCounter = setInterval(async () => {
+            setAnsCorrectionStarted(true);
+            const response = await getTaskStatus(notifier, task_id);
+
+            if (!(response && response.status)) {
+                console.error('No response status found')
+            }
+            else {
+                if (response.status == 'Success') {
+                    
+            clearInterval(_intervalCounter);
+        
+                }
+                else if (response.status == 'Failed') {
+                    console.error('Task failed in server');
+                    setIntervalRunning(false);
+                    clearInterval(_intervalCounter);
+                }
+            }
+        }, REFRESH_INTERVAL);
+
+        console.warn('Interval counter started')
+        setIntervalRunning(true)
+    }
+    const query1 = "I had an interview,the role was:"+role+"the 5 questions asked are:"+questions+"And the answers I gave are:"+answers
+    const query2 = "Check the answers, each question holds 20 points. Identify if the answer is right or wrong answer (if wrong then why), areas of improvement and the score. Use the word you for explaining"
+    const query3 = "Give the total scores out of 100 at the end."
+    const query = query1 + query2
+    const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
+         if (!run1Executed) {
+             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+             const prompt = query;
+ 
+             const result = await model.generateContent(prompt);
+             const response = await result.response;
+             const text = response.text();
+             setAnsCorrectionCompleted(true);
+             setanswerResult(text); 
+             setRun1Executed(true);
+             setIntervalRunning(true);}
+   
 }
 const [setScore, setScoreDone] = useState(false)
 useEffect(() =>{
@@ -390,7 +424,7 @@ return(
                                            {answerResult.split('\n').map((line, index) => (
                                            <div key={index} style={{ fontSize: '1.1rem' }}> 
                                             <React.Fragment key={index}>
-                                            {line.replace(/\*/g, '')}
+                                            {line.replace(/[*]/g, '')}
                                             <br />
                                             </React.Fragment>
                                             </div>

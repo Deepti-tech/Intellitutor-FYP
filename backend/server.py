@@ -7,6 +7,7 @@ from store import task_store
 from job_manager import job_manager
 from resume_similarity import start_similary
 from speech_analyzer import analize_audio
+from speech_analyzer import video_to_text
 from video_analyzer import emotion_analyse
 from utils import cprint, unique_filename
 
@@ -363,6 +364,16 @@ def analizeCanadidateAudio():
         return {'msg': 'File Path not found'}, 400
     job_manager.terminate_all()
     task_id = job_manager.add_job(analize_audio, file_path)
+    return task_id
+
+@app.route('/createTextFile', methods = ['GET'])
+@cross_origin(supports_credentials=True)
+def createTextFile():
+    file_path = request.args.get('filePath', None)
+    if not file_path:
+        return {'msg': 'File Path not found'}, 400
+    job_manager.terminate_all()
+    task_id = job_manager.add_job(video_to_text, file_path)
     return task_id
 
 @app.route('/get_plot')
