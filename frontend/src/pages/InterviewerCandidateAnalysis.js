@@ -6,13 +6,16 @@ import happy_image from '../media/happy.gif'
 import neutral_image from '../media/neutral-face.gif'
 import sad from '../media/sad.gif'
 import surprised from '../media/surprised.gif'
-
+import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+import textfile from '../audio.txt';
+import { useLocation } from 'react-router-dom'
 import {
     getCandidateProfile,
     analizeCanadidateResume,
     getTaskStatus,
     analizeCanadidateVideo,
-    analizeCanadidateAudio
+    analizeCanadidateAudio,
+    createTextFile
 } from '../js/httpHandler';
 
 const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, designation }) => {
@@ -20,6 +23,7 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
     const [videoPath, setVideoPath] = useState(video_path)
     const [intervalRunning, setIntervalRunning] = useState(false);
     const [resumeAnalysisText, setResumeAnalysisText] = useState('');
+    const { state } = useLocation();
     const [analysisProgress, setAnalysisProgress] = useState({
         'label': { 'Angry': 0, 'Happy': 0, 'Neutral': 0, 'Sad': 0, 'Surprise': 0 },
         'processed': 0,
@@ -40,7 +44,16 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
     });
     const sourceRef = useRef();
     const videoRef = useRef();
-
+    const [runExecuted, setRunExecuted] = useState(false);
+    const [run1Executed, setRun1Executed] = useState(false);
+    const [tipsGenStarted, settipsGenStarted] = useState(false);
+    const [AnsCorrectionStarted, setAnsCorrectionStarted] = useState(false);
+    const [tipsGenCompleted, settipsGenCompleted] = useState(false)
+    const [AnsCorrectionCompleted, setAnsCorrectionCompleted] = useState(false)
+    // const interview_id = state.id
+    const [answerResult, setanswerResult] = useState('');
+    const role = designation
+const questions = state.questions
     useEffect(() => {
         if (sourceRef.current.src && videoRef.current) {
             sourceRef.current.src = `http://localhost:5000/getInterviewVideo?file_path=${videoPath}`
@@ -92,7 +105,6 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
         }
     }
 
-
     const REFRESH_INTERVAL = 1500;
     const analizeResume = async () => {
         // Add Interval counter if not exists
@@ -131,7 +143,6 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
             setIntervalRunning(true)
         }
     }
-
 
     const analizeInterview = async () => {
 
@@ -177,7 +188,6 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
 
     }
 
-
     const analizeAudio = async () => {
 
         if (!intervalRunning) {
@@ -217,7 +227,86 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
         }
 
     }
+    const [answers, setText] = React.useState();
+useEffect(() => {    
+  fetch(textfile)
+    .then((response) => response.text())
+    .then((textContent) => {
+      setText(textContent);
+    });
+  }, []);
+const answerAnalysis = async() =>{
+    if (!intervalRunning) {
+        const task_id = await createTextFile(notifier, videoPath);
+        if (!task_id) {
+            console.error("Task couldn't be created.")
+            return
+        }
 
+        const _intervalCounter = setInterval(async () => {
+            setAnsCorrectionStarted(true);
+            const response = await getTaskStatus(notifier, task_id);
+
+            if (!(response && response.status)) {
+                console.error('No response status found')
+            }
+            else {
+                if (response.status == 'Success') {
+                    
+            clearInterval(_intervalCounter);
+        
+                }
+                else if (response.status == 'Failed') {
+                    console.error('Task failed in server');
+                    setIntervalRunning(false);
+                    clearInterval(_intervalCounter);
+                }
+            }
+        }, REFRESH_INTERVAL);
+
+        console.warn('Interval counter started')
+        setIntervalRunning(true)
+    }
+    console.log("Role: "+ role)
+    console.log("Q: "+ questions)
+    console.log("A: "+ answers)
+    const query1 = "I had an interview,the role was:"+role+"the 5 questions asked are:"+questions+"And the answers I gave are:"+answers
+    const query2 = "Check the answers, each question holds 20 points. Identify if the answer is right or wrong answer (if wrong then why), areas of improvement and the score. Use the word you for explaining"
+    const query3 = "Give the total scores out of 100 at the end."
+    const query = query1 + query2 + query3
+    const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
+         if (!run1Executed) {
+             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+             const prompt = query;
+ 
+             const result = await model.generateContent(prompt);
+             const response = await result.response;
+             const text = response.text();
+             setAnsCorrectionCompleted(true);
+             setanswerResult(text); 
+             setRun1Executed(true);
+             setIntervalRunning(true);}
+   
+}
+const [setScore, setScoreDone] = useState(false)
+useEffect(() =>{
+    if(run1Executed & !setScore){
+        const scoreMatch = answerResult.match(/(\d+)\/100/);
+        if (scoreMatch) {
+        const score = scoreMatch[1]; 
+        setCandidateScores({...candidateScores, answer_score: (score)})
+        setScoreDone(true)
+        } else{
+            const scoreMatch = answerResult.match(/(\d+)out of 100/);
+            if (scoreMatch) {
+                const score = scoreMatch[1]; 
+                setCandidateScores({...candidateScores, answer_score: (score)})
+                setScoreDone(true)
+                } else{
+                console.log("Score not found in the sentence.")}
+        }
+    }
+})
     return (
         <div className='page-wrapper'>
             <Navbar selectedPage={linkList.HOME} />
@@ -357,6 +446,37 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
 
                         }
 
+                    </div>
+
+                    <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
+                        <button className='custom-blue'  onClick={answerAnalysis} style={{width:'130px'}}>Analize Answers</button>
+
+                        {
+                            ((AnsCorrectionStarted && (!AnsCorrectionCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Evaluating your answers ...</span>
+                        }
+
+                        {
+                            (AnsCorrectionCompleted) &&
+                            <div className='interview-analysis' >
+                                <div style={{ alignSelf: 'stretch' }}>
+                                <span style={{ fontSize: '1.3rem', textDecoration: 'underlined' }} > Answer Analysis </span>
+                                    <div className='audio-result-container'>                                       
+                                    <div>
+                                        <span style={{ color: 'black' }}> 
+                                           {answerResult.split('\n').map((line, index) => (
+                                           <div key={index} style={{ fontSize: '1.1rem' }}> 
+                                            <React.Fragment key={index}>
+                                            {line.replace(/[*]/g, '')}
+                                            <br />
+                                            </React.Fragment>
+                                            </div>
+                                            ))}
+                                           </span>
+                                       </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
 
                 </div>

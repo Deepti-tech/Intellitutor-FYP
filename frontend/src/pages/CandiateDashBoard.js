@@ -43,7 +43,7 @@ const CandiateDashBoard = () => {
                                         <div>Status: </div><b>{interview_status}</b>
                                     </div>
                                     {(item.enabled && (!item.completed)) && <button className='custom-purple' style={{ float: 'right', marginRight: '20px' }}
-                                        onClick={() => { navigate('/candidateInterview', { state: { props: { 'interview_id': item._id,  } } }) }}> Join Interview</button>}
+                                        onClick={() => { navigate('/candidateInterview', { state: { props: { 'interview_id': item._id, "designation": item.designation } } }) }}> Join Interview</button>}
                                 </div>)
                         })
                     }

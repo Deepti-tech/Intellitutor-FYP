@@ -237,7 +237,7 @@ const answerAnalysis = async() =>{
     const query1 = "I had an interview,the role was:"+role+"the 5 questions asked are:"+questions+"And the answers I gave are:"+answers
     const query2 = "Check the answers, each question holds 20 points. Identify if the answer is right or wrong answer (if wrong then why), areas of improvement and the score. Use the word you for explaining"
     const query3 = "Give the total scores out of 100 at the end."
-    const query = query1 + query2
+    const query = query1 + query2 + query3
     const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
          if (!run1Executed) {
              const model = genAI.getGenerativeModel({ model: "gemini-pro" });

@@ -105,6 +105,7 @@ const CandidatePracticeInterview = ({ }) => {
             setRunExecuted(true);
         }
     };
+    
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const parsedQuestions = useMemo(() => Questions.split('\n').filter(line => line.trim() !== ''), [Questions]);
 
@@ -139,9 +140,7 @@ const CandidatePracticeInterview = ({ }) => {
                     </div>
                     ))}
                     </div>
-                    
-
-      </div>
+                  </div>
       
                     
                     {(!permissionGranted) &&
