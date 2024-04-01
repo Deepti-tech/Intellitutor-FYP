@@ -112,6 +112,21 @@ def set_practice_interview_score():
     return db_actions.set_practice_interview_score(interview_id, payload)
 
 
+@app.route('/set_interview_question', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def set_interview_question():
+    _id = request.args.get('_id', None)
+    question = request.args.get('question', None)
+    username = session.get('username', None)
+    
+    if not username:
+        return {'msg': 'Authentication error'}, 401
+
+    if not(_id):
+        return {'msg': 'Invalid parameters'}, 400
+    return db_actions.set_interview_question(_id, question)
+
+
 @app.route('/job_list', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_job_list():

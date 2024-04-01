@@ -3,7 +3,9 @@ import Navbar, { linkList } from '../Components/Navbar'
 import { getStreamId, sendBlobData } from '../js/httpHandler'
 import { useNotifier } from '../js/utils';
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-
+import {
+    setInterviewQuestion
+} from '../js/httpHandler';
 const CandidateInterviewPage = ({ interview_id, designation }) => {
     const [permissionError, setPermissionError] = useState(false);
     const [permissionGranted, setPermissionGranted] = useState(false);
@@ -39,7 +41,7 @@ const CandidateInterviewPage = ({ interview_id, designation }) => {
         }
     }, [mediaRecorder, streamId])
 
-
+    
     const allowRecording = () => {
         run();
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -72,11 +74,14 @@ const CandidateInterviewPage = ({ interview_id, designation }) => {
             const text = response.text();
             setQuestions(text);
             setRunExecuted(true);
+            setInterviewQuestion(interview_id, Questions)
         }
     };
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const parsedQuestions = useMemo(() => Questions.split('\n').filter(line => line.trim() !== ''), [Questions]);
-
+    useEffect(() => {
+        setInterviewQuestion(interview_id, Questions)
+    })
     const nextQuestion = () => {
         setCurrentQuestionIndex((prevIndex) => Math.min(prevIndex + 1, parsedQuestions.length - 1));
       };

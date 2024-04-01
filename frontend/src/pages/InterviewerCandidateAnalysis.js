@@ -18,7 +18,7 @@ import {
     createTextFile
 } from '../js/httpHandler';
 
-const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, designation }) => {
+const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, designation, questions }) => {
     // video_path = 'C:/Users/Deepti Singh/Documents/FYP/Intellitutor-FYP/Archive-Version-1/src/input/d997b4ed-5462-11ee-8ddb-141333178768.mp4'
     const [videoPath, setVideoPath] = useState(video_path)
     const [intervalRunning, setIntervalRunning] = useState(false);
@@ -53,7 +53,7 @@ const InterviewerCandidateAnalysis = ({ candidate_username, video_path, job_id, 
     // const interview_id = state.id
     const [answerResult, setanswerResult] = useState('');
     const role = designation
-const questions = state.questions
+// const questions = questions
     useEffect(() => {
         if (sourceRef.current.src && videoRef.current) {
             sourceRef.current.src = `http://localhost:5000/getInterviewVideo?file_path=${videoPath}`
@@ -271,7 +271,7 @@ const answerAnalysis = async() =>{
     console.log("Q: "+ questions)
     console.log("A: "+ answers)
     const query1 = "I had an interview,the role was:"+role+"the 5 questions asked are:"+questions+"And the answers I gave are:"+answers
-    const query2 = "Check the answers, each question holds 20 points. Identify if the answer is right or wrong answer (if wrong then why), areas of improvement and the score. Use the word you for explaining"
+    const query2 = "Check the answers, each question holds 20 points. Identify if the answer that I gave is right or wrong answer (if wrong then why), if right tell me areas of improvement and the score. Use the word you for explaining"
     const query3 = "Give the total scores out of 100 at the end."
     const query = query1 + query2 + query3
     const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
