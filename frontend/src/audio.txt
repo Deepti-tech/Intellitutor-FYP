@@ -1,1 +1,1 @@
-describe
+ladki picture is a dynamic programming language it works on object oriented paradigm it is a platform independent language and concepts like automated garbage cleaning and exception handling makes it more robust
