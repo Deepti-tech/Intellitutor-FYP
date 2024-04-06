@@ -97,7 +97,7 @@ const CandidatePracticeInterview = ({ }) => {
     const run = async () => {
         if (!runExecuted) {
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-            const prompt = "Assume you are an interviewer. Ask 5 questions based on the role: " + userRole + " to a candidate. Do not give answers. Avoid using this ** . Keep the first question as What are the features of Java Programming Language?";
+            const prompt = "Assume you are an interviewer. Ask 5 questions based on the role: " + userRole + " to a candidate. Do not give answers. Avoid using this ** .";
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const text = response.text();
