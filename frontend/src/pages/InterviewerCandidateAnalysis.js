@@ -312,7 +312,7 @@ useEffect(() =>{
             <Navbar selectedPage={linkList.HOME} />
             <div className='page-container'>
                 <div className='sample-interview-div'>
-                    <button className='custom-blue-reverse'  onClick={() => { setVideoPath('uploads/sample.mp4')}}>Load Sample Interview</button>
+                    <button className='custom-blue-reverse'  onClick={() => { setVideoPath('uploads/Sample_Interview.mp4')}}>Load Sample Interview</button>
                 </div>
                 <div className='profile-orverview'>
 
