@@ -153,6 +153,16 @@ export const setPracticeInterviewScore = async (interview_id, payload) => {
     }
     return resp.response
 }
+export const setInterviewQuestion = async (_id, question) => {
+    const resp = await GetRequest('/set_interview_question', {'_id': _id, 'question': question})
+    console.log(question)
+    if (!resp.status) {
+        if (resp.msg)
+            // notifier(resp.msg)
+        return ''
+    }
+    return resp.response
+}
 
 export const getInterviewerOpenings = async (notifier,) => {
     const resp = await GetRequest('/openingsPosted');
@@ -315,6 +325,16 @@ export const analizeCanadidateVideo = async (notifier, video_path) => {
 
 export const analizeCanadidateAudio = async (notifier, video_path) => {
     const resp = await GetRequest('/analizeCanadidateAudio', { 'filePath':  video_path})
+    if (!resp.status) {
+        if (resp.msg)
+            notifier(resp.msg)
+        return ''
+    }
+    return resp.response
+
+}
+export const createTextFile = async (notifier, video_path) => {
+    const resp = await GetRequest('/createTextFile', { 'filePath':  video_path})
     if (!resp.status) {
         if (resp.msg)
             notifier(resp.msg)

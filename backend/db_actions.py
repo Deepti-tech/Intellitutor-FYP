@@ -86,6 +86,14 @@ def set_practice_interview_score(interview_id, payload):
     mongo.user_practice_interviews.update_one({'interview_id': interview_id}, {'$set': payload_dict})
     return 'success'
 
+def set_interview_question(_id, question):
+    
+    # payload_dict = json.loads(question)
+    mongo.interview_list.update_one({'_id': ObjectId(_id)}, {
+                                    '$set': {'questions': question}})
+    # mongo.user_practice_interviews.update_one({'interview_id': interview_id}, {'$set': questions})
+    return 'success'
+
 def get_job_list(username):
     applied = mongo.job_list.find({'applied': username}, {'applied': 0})
     applied = convert_cursor(applied) or []
@@ -229,11 +237,13 @@ def get_plot(username):
     mute_percent=[]
     total_filler_words=[]
     filler_percent=[]
+    answerData = []
     result = mongo.user_practice_interviews.find({'candidate': username})
     result = convert_cursor(result)
     for res in result:
         audioData.append(res['audio_score'])
         videoData.append(res['video_score'])
+        answerData.append(res['answer_score'])
         Happy.append(res['Happy'])
         Sad.append(res['Sad'])
         Neutral.append(res['Neutral'])
@@ -247,6 +257,7 @@ def get_plot(username):
     data = {
         'audioData': audioData,
         "videoData": videoData,
+        "answerData": answerData,
         "Happy": Happy,
         "Sad": Sad,
         "Angry": Angry,

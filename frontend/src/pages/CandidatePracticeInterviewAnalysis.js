@@ -11,13 +11,16 @@ import {
     getTaskStatus,
     analizeCanadidateVideo,
     analizeCanadidateAudio,
-    setPracticeInterviewScore
-} from '../js/httpHandler';
 
+    setPracticeInterviewScore,
+    createTextFile
+} from '../js/httpHandler';
+import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+import textfile from '../audio.txt';
 const CandidatePracticeInterviewAnalysis = ({}) => {
     const { state } = useLocation();
     const notifier = useNotifier();
-    const { username, job_id, role } = (state && state.username) ? state : { username: '', job_id: '', role: '' }
+    // const { username, job_id, role } = (state && state.username) ? state : { username: '', job_id: '', role: '' }
     const [intervalRunning, setIntervalRunning] = useState(false);
     const [analysisProgress, setAnalysisProgress] = useState({
     'label': { 'Angry': 0, 'Happy': 0, 'Neutral': 0, 'Sad': 0, 'Surprise': 0 },
@@ -35,18 +38,24 @@ const [candidateScores, setCandidateScores] = useState({
         'total_filler_words': 0,
         'filler_percent': 0,
     },
-    audio_score: 0
+    audio_score: 0,
+    answer_score: 0
 });
 const sourceRef = useRef();
 const videoRef = useRef();
 const [interviewAnalStarted, setInterviewAnalStarted] = useState(false);
 const [audioStarted, setAudioStarted] = useState(false);
 const [tipsGenStarted, settipsGenStarted] = useState(false);
+const [AnsCorrectionStarted, setAnsCorrectionStarted] = useState(false);
 const [audioCompleted, setAudioCompleted] = useState(false)
 const [tipsGenCompleted, settipsGenCompleted] = useState(false)
+const [AnsCorrectionCompleted, setAnsCorrectionCompleted] = useState(false)
 const REFRESH_INTERVAL = 1500;
 const videoPath = state.videoPath
 const interview_id = state.id
+const role = state.role
+const questions = state.questions
+
 
 useEffect(() => {
     setPercent(Math.round(analysisProgress.processed / Math.max(analysisProgress.frames, 1) * 100))
@@ -83,6 +92,7 @@ useEffect(() => {
         0.1 * candidateScores.audio_output.mute_percent +
         0.2 * candidateScores.audio_output.total_filler_words +
         0.2 * candidateScores.audio_output.filler_percent,
+        'answer_score': candidateScores.answer_score,
     }
     setPracticeInterviewScore(interview_id, payload)
 })
@@ -163,44 +173,108 @@ const analizeAudio = async () => {
     }
 }
 const [tipsResult, setTipsResult] = useState('');
+
+const [answerResult, setanswerResult] = useState('');
+const [runExecuted, setRunExecuted] = useState(false);
+const [run1Executed, setRun1Executed] = useState(false);
+
 const GetTips = async () => {
-    const url = 'https://chatgpt-42.p.rapidapi.com/conversationgpt4';
+
     const query1 = "I gave a practice interview. Act as if you took my interview and following are details. My speaking speed was" + candidateScores.audio_output.speed + "word per minute(wpm) was" + candidateScores.audio_output.wpm + "The initial pause was" + candidateScores.audio_output.initial_pause_percent + "and my pause percentage was" + candidateScores.audio_output.mute_percent + ". I used" + candidateScores.audio_output.total_filler_words + " filler words and my filler percentage is" + candidateScores.audio_output.filler_percent;
     const query2 = "Following are the number of frames for each emotions I displayed (do not use the word 'frames' in reply) 1.Happy: " + analysisProgress.label.Happy + "2. Sad: " + analysisProgress.label.Sad + "3. Angry:" + analysisProgress.label.Angry + "4.Surprise:" + analysisProgress.label.Surprise + "5.Neutral:" + analysisProgress.label.Neutral + " Tell me my strong points and how to improve on weak areas precisely in 5-7 lines.";
     const query = query1 + query2;
     settipsGenStarted(true);
-    const options = {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            'X-RapidAPI-Key': 'e95bd5207emsh57746e4debc5426p175cf8jsn6fb4c4a58bf6',
-            'X-RapidAPI-Host': 'chatgpt-42.p.rapidapi.com',
-        },
-        body: JSON.stringify({
-            messages: [
-                {
-                    role: 'user',
-                    content: query
-                }
-            ],
-            system_prompt: '',
-            temperature: 0.5,
-            top_k: 50,
-            top_p: 0.9,
-            max_tokens: 200
-        })
-    };
 
-    try {
-        const response = await fetch(url, options);
-        settipsGenCompleted(true);
-        const jsonResponse = await response.json();
-        const { result } = jsonResponse;
-        setTipsResult(result); 
-    } catch (error) {
-        console.error(error);
-    }
+    const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
+        if (!runExecuted) {
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            const prompt = query;
+
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
+            settipsGenCompleted(true);
+            setTipsResult(text); 
+            setRunExecuted(true);
+        }
 }
+const [answers, setText] = React.useState();
+useEffect(() => {    
+  fetch(textfile)
+    .then((response) => response.text())
+    .then((textContent) => {
+      setText(textContent);
+    });
+  }, []);
+const answerAnalysis = async() =>{
+    if (!intervalRunning) {
+        const task_id = await createTextFile(notifier, videoPath);
+        if (!task_id) {
+            console.error("Task couldn't be created.")
+            return
+        }
+
+        const _intervalCounter = setInterval(async () => {
+            setAnsCorrectionStarted(true);
+            const response = await getTaskStatus(notifier, task_id);
+
+            if (!(response && response.status)) {
+                console.error('No response status found')
+            }
+            else {
+                if (response.status == 'Success') {
+                    
+            clearInterval(_intervalCounter);
+        
+                }
+                else if (response.status == 'Failed') {
+                    console.error('Task failed in server');
+                    setIntervalRunning(false);
+                    clearInterval(_intervalCounter);
+                }
+            }
+        }, REFRESH_INTERVAL);
+
+        console.warn('Interval counter started')
+        setIntervalRunning(true)
+    }
+    const query1 = "I had an interview,the role was:"+role+"the 5 questions asked are:"+questions+"And the answers I gave are:"+answers
+    const query2 = "Check the answers, each question holds 20 points. Identify if the answer is right or wrong answer (if wrong then why), areas of improvement and the score. Use the word you for explaining"
+    const query3 = "Give the total scores out of 100 at the end."
+    const query = query1 + query2 + query3
+    const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
+         if (!run1Executed) {
+             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+             const prompt = query;
+ 
+             const result = await model.generateContent(prompt);
+             const response = await result.response;
+             const text = response.text();
+             setAnsCorrectionCompleted(true);
+             setanswerResult(text); 
+             setRun1Executed(true);
+             setIntervalRunning(true);}
+   
+}
+const [setScore, setScoreDone] = useState(false)
+useEffect(() =>{
+    if(run1Executed & !setScore){
+        const scoreMatch = answerResult.match(/(\d+)\/100/);
+        if (scoreMatch) {
+        const score = scoreMatch[1]; 
+        setCandidateScores({...candidateScores, answer_score: (score)})
+        setScoreDone(true)
+        } else{
+            const scoreMatch = answerResult.match(/(\d+)out of 100/);
+            if (scoreMatch) {
+                const score = scoreMatch[1]; 
+                setCandidateScores({...candidateScores, answer_score: (score)})
+                setScoreDone(true)
+                } else{
+                console.log("Score not found in the sentence.")}
+        }
+    }
+})
 return(
     <div className='page-wrapper'>
         <Navbar selectedPage={linkList.PRACTICE_INTERVIEW} />
@@ -212,8 +286,6 @@ return(
                         <source src={`http://localhost:5000/getInterviewVideo?file_path=${videoPath}`} ref={sourceRef} />
                     </video>
                 </div>
-
-
                 <div className='ai-action-section'>
                     <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
                         <button className='custom-blue' style={{width:'130px'}} onClick={analizeInterview}> Analize Interview</button>
@@ -223,8 +295,6 @@ return(
                                 <div style={{ alignSelf: 'flex-start' }}>
                                     Frames Processed: {analysisProgress.processed}/ {analysisProgress.frames}
                                 </div>
-
-
                                 <div className='emoji-container' >
                                     <img height={60} width={60} src={happy_image} />
                                     <span style={{ fontSize: '1.8rem' }}>{analysisProgress.label.Happy}</span>
@@ -263,7 +333,6 @@ return(
 
                     <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
                         <button className='custom-blue'  onClick={analizeAudio} style={{width:'130px'}}> Analize Speech</button>
-
                         {
                             ((audioStarted && (!audioCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Analyzing Audio ...</span>
                         }
@@ -311,10 +380,8 @@ return(
                             </div>
                         }
                     </div>
-
                     <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
                         <button className='custom-blue'  onClick={GetTips} style={{width:'130px'}}> Get Tips</button>
-
                         {
                             ((tipsGenStarted && (!tipsGenCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Generating tips ...</span>
                         }
@@ -324,10 +391,50 @@ return(
                             <div className='interview-analysis' >
                                 <div style={{ alignSelf: 'stretch' }}>
 
+                                <span style={{ fontSize: '1.3rem', textDecoration: 'underlined' }} > Tips: </span>
                                     <div className='audio-result-container'>                                       
                                         <div>
-                                            <span style={{ fontSize: '1.1rem' }}> Tips: <span style={{ color: 'black' }}> {tipsResult} </span></span>
+                                        
+                                         <span style={{ color: 'black' }}> 
+                                            {tipsResult.split('\n').map((line, index) => (
+                                            <div key={index} style={{ fontSize: '1.1rem' }}>
+                                            {line.replace(/\*\*/g, '')}
                                         </div>
+                                        ))}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
+                        <button className='custom-blue'  onClick={answerAnalysis} style={{width:'130px'}}>Analize Answers</button>
+
+                        {
+                            ((AnsCorrectionStarted && (!AnsCorrectionCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Evaluating your answers ...</span>
+                        }
+
+                        {
+                            (AnsCorrectionCompleted) &&
+                            <div className='interview-analysis' >
+                                <div style={{ alignSelf: 'stretch' }}>
+                                <span style={{ fontSize: '1.3rem', textDecoration: 'underlined' }} > Answer Analysis </span>
+                                    <div className='audio-result-container'>                                       
+                                    <div>
+                                        <span style={{ color: 'black' }}> 
+                                           {answerResult.split('\n').map((line, index) => (
+                                           <div key={index} style={{ fontSize: '1.1rem' }}> 
+                                            <React.Fragment key={index}>
+                                            {line.replace(/[*]/g, '')}
+                                            <br />
+                                            </React.Fragment>
+                                            </div>
+                                            ))}
+                                           </span>
+                                       </div>
+
                                     </div>
                                 </div>
                             </div>

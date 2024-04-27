@@ -9,7 +9,7 @@ from utils import cprint
 
 def video_to_text(file_path):
     audio_path = f'..\\Archive-Version-1\\src\\output\\{uuid1()}.wav'
-    text_file_path = f'..\\Archive-Version-1\\src\\output\\audio.txt'
+    text_file_path = f'..\\frontend\\src\\audio.txt'
     command2wav = f"support\\ffmpeg -i {file_path} -v quiet -vn -acodec pcm_s16le -ar 44100 -ac 2 {audio_path}"
     cprint(command2wav)
     os.system(command2wav)
@@ -41,7 +41,7 @@ def speech_speed(audio_path, speech_text):
     duration_min = frames / (rate * 60)
     wpm = word_count / duration_min
     speed = 'Slow'
-    if wpm > 120 and wpm <= 160:
+    if wpm > 80 and wpm <= 160:
         speed = 'Medium'
     elif (wpm > 160):
         speed = 'Fast'

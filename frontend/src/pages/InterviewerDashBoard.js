@@ -82,7 +82,8 @@ const InterviewerDashBoard = () => {
                                                             'candidate_username': item.candidate,
                                                             'video_path': item.filename,
                                                             'job_id': item.job_id,
-                                                            'designation': item.designation}
+                                                            'designation': item.designation,
+                                                            'questions': item.questions}
                                                     }
                                                 })
                                             }}> Analize Interview</button>

@@ -21,8 +21,6 @@ const Navbar = (props) => {
 
     const highlightSelectedPage = (selectedPage, accessLevel, loggedIn) => {
         const pageLinkList = Object.values(linkList)
-        // Fileter links with adming access if user doesn't have it.
-
         const finalLinkList = []
 
         for (let index = 0; index < pageLinkList.length; index++) {

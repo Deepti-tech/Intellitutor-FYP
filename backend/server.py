@@ -7,6 +7,7 @@ from store import task_store
 from job_manager import job_manager
 from resume_similarity import start_similary
 from speech_analyzer import analize_audio
+from speech_analyzer import video_to_text
 from video_analyzer import emotion_analyse
 from utils import cprint, unique_filename
 
@@ -109,6 +110,21 @@ def set_practice_interview_score():
         return {'msg': 'Invalid parameters'}, 400
     # payload['audio_score'] = 0.2 *payload['wpm'] + 0.1 *payload['initial_pause_percent'] + 0.1 *payload['mute_percent'] + 0.2 *payload['total_filler_words'] + 0.2 *payload['filler_percent']
     return db_actions.set_practice_interview_score(interview_id, payload)
+
+
+@app.route('/set_interview_question', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def set_interview_question():
+    _id = request.args.get('_id', None)
+    question = request.args.get('question', None)
+    username = session.get('username', None)
+    
+    if not username:
+        return {'msg': 'Authentication error'}, 401
+
+    if not(_id):
+        return {'msg': 'Invalid parameters'}, 400
+    return db_actions.set_interview_question(_id, question)
 
 
 @app.route('/job_list', methods=['GET'])
@@ -363,6 +379,16 @@ def analizeCanadidateAudio():
         return {'msg': 'File Path not found'}, 400
     job_manager.terminate_all()
     task_id = job_manager.add_job(analize_audio, file_path)
+    return task_id
+
+@app.route('/createTextFile', methods = ['GET'])
+@cross_origin(supports_credentials=True)
+def createTextFile():
+    file_path = request.args.get('filePath', None)
+    if not file_path:
+        return {'msg': 'File Path not found'}, 400
+    job_manager.terminate_all()
+    task_id = job_manager.add_job(video_to_text, file_path)
     return task_id
 
 @app.route('/get_plot')

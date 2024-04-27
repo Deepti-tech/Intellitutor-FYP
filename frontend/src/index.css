@@ -338,6 +338,15 @@ button.custom-blue:hover {
 button.custom-blue:active {
   transform: scale(0.97);
 }
+button.custom-blue:disabled {
+  background-color: white;
+  color: var(--ui-blue);
+  outline: none;
+  border: 1px solid var(--ui-blue);
+  border-radius: 3px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
 
 button.custom-blue-reverse {
   background-color: white;

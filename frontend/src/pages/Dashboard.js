@@ -72,7 +72,7 @@ const Dashboard = ({}) => {
         datasets: [
           {
             label: 'QnA',
-            data: score.audioData,
+            data: score.answerData,
             backgroundColor: ['rgba(0, 0, 0, 0.5)'],
             borderColor: ['black'],
             borderWidth: 1,
@@ -171,7 +171,7 @@ const Dashboard = ({}) => {
       };
       const highestAudioScore = score.audioData?.reduce((a, b) => Math.max(a, b), 0) || 0;
       const highestVideoScore = score.videoData?.reduce((a, b) => Math.max(a, b), 0) || 0;
-      const highestQnAScore = score.videoData?.reduce((a, b) => Math.max(a, b), 0) || 0;
+      const highestQnAScore = score.answerData?.reduce((a, b) => Math.max(a, b), 0) || 0;
       
     return(
         <div className='page-wrapper'>
