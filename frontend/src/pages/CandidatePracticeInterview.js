@@ -97,17 +97,20 @@ const CandidatePracticeInterview = ({ }) => {
     const run = async () => {
         if (!runExecuted) {
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
             const prompt = "Assume you are an interviewer. Ask 5 questions based on the role: " + userRole + " to a candidate. Do not give answers. Avoid using this ** .";
             const result = await model.generateContent(prompt);
             const response = await result.response;
             const text = response.text();
+
             setQuestions(text);
             setRunExecuted(true);
         }
     };
-    
+
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const parsedQuestions = useMemo(() => Questions.split('\n').filter(line => line.trim() !== ''), [Questions]);
+
 
     const nextQuestion = () => {
         setCurrentQuestionIndex((prevIndex) => Math.min(prevIndex + 1, parsedQuestions.length - 1));
@@ -130,6 +133,7 @@ const CandidatePracticeInterview = ({ }) => {
                         <input type="text" style={{ height: '35px', width: '95%' }}  value={userRole} onChange={handleRoleInputChange}/>
                     </div>
                     <div id='questions' style={{display: 'none', fontSize: '1.2rem', fontWeight: '600'}}>
+
                     <div>
                         {parsedQuestions.map((line, index) => (
                     <div key={index} style={{ display: index === currentQuestionIndex ? 'block' : 'none', fontSize: '1 rem', fontWeight: '500' }}>
@@ -142,6 +146,7 @@ const CandidatePracticeInterview = ({ }) => {
                     </div>
                   </div>
       
+
                     
                     {(!permissionGranted) &&
                         <>

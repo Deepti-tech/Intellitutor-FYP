@@ -56,6 +56,7 @@ const interview_id = state.id
 const role = state.role
 const questions = state.questions
 
+
 useEffect(() => {
     setPercent(Math.round(analysisProgress.processed / Math.max(analysisProgress.frames, 1) * 100))
     setCandidateScores(
@@ -172,15 +173,18 @@ const analizeAudio = async () => {
     }
 }
 const [tipsResult, setTipsResult] = useState('');
+
 const [answerResult, setanswerResult] = useState('');
 const [runExecuted, setRunExecuted] = useState(false);
 const [run1Executed, setRun1Executed] = useState(false);
 
 const GetTips = async () => {
+
     const query1 = "I gave a practice interview. Act as if you took my interview and following are details. My speaking speed was" + candidateScores.audio_output.speed + "word per minute(wpm) was" + candidateScores.audio_output.wpm + "The initial pause was" + candidateScores.audio_output.initial_pause_percent + "and my pause percentage was" + candidateScores.audio_output.mute_percent + ". I used" + candidateScores.audio_output.total_filler_words + " filler words and my filler percentage is" + candidateScores.audio_output.filler_percent;
     const query2 = "Following are the number of frames for each emotions I displayed (do not use the word 'frames' in reply) 1.Happy: " + analysisProgress.label.Happy + "2. Sad: " + analysisProgress.label.Sad + "3. Angry:" + analysisProgress.label.Angry + "4.Surprise:" + analysisProgress.label.Surprise + "5.Neutral:" + analysisProgress.label.Neutral + " Tell me my strong points and how to improve on weak areas precisely in 5-7 lines.";
     const query = query1 + query2;
     settipsGenStarted(true);
+
     const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
         if (!runExecuted) {
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -376,10 +380,8 @@ return(
                             </div>
                         }
                     </div>
-
                     <div className='job-control-container' style={{ alignSelf: 'flex-start', width: '100%' }}>
                         <button className='custom-blue'  onClick={GetTips} style={{width:'130px'}}> Get Tips</button>
-
                         {
                             ((tipsGenStarted && (!tipsGenCompleted))) && <span style={{marginTop:'10px', color:'#411d7aaa', fontSize:'1.1rem', fontWeight:'600'}}> Generating tips ...</span>
                         }
@@ -388,6 +390,7 @@ return(
                             (tipsGenCompleted) &&
                             <div className='interview-analysis' >
                                 <div style={{ alignSelf: 'stretch' }}>
+
                                 <span style={{ fontSize: '1.3rem', textDecoration: 'underlined' }} > Tips: </span>
                                     <div className='audio-result-container'>                                       
                                         <div>
@@ -431,6 +434,7 @@ return(
                                             ))}
                                            </span>
                                        </div>
+
                                     </div>
                                 </div>
                             </div>
