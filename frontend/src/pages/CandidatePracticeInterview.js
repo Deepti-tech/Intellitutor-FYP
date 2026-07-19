@@ -21,6 +21,7 @@ const CandidatePracticeInterview = ({ }) => {
     const [runExecuted, setRunExecuted] = useState(false);
 
     const [isRecording, setIsRecording] = useState(false);
+    const [generationError, setGenerationError] = useState('');
 
     const send_blobs = async (blob_data) => {
         if (streamId) {
@@ -100,12 +101,21 @@ const CandidatePracticeInterview = ({ }) => {
 console.log(userRole);
             const prompt = "Assume you are an interviewer. Ask 5 questions based on the role: " + userRole + " to a candidate. Do not give answers. Avoid using this ** ";
 
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const text = response.text();
-            console.log(text);
-            setQuestions(text);
-            setRunExecuted(true);
+            try {
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                const text = response.text();
+                console.log(text);
+                setQuestions(text);
+                setRunExecuted(true);
+                setGenerationError('');
+            } catch (error) {
+                if (String(error).includes("429")) {
+                    setGenerationError("AI requests are temporarily unavailable. Please try again later.");
+                } else {
+                    setGenerationError("Could not generate an interview response.");
+                }
+            }
         }
     };
 
@@ -146,6 +156,10 @@ console.log(userRole);
                     {permissionError &&
                         <div className='alert-message'>
                             <span> Error: User did not grant camera permission</span>
+                        </div>}
+                    {generationError &&
+                        <div className='alert-message'>
+                            <span>{generationError}</span>
                         </div>}
                     </div>
                 </div>

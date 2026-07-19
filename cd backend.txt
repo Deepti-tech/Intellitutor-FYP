@@ -3,7 +3,7 @@ python -m venv venv
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 venv\Scripts\activate
 for mac --> source venv/bin/activate
-pip install flask flask_cors pymongo pdfplumber nltk SpeechRecognition librosa opencv-python tensorflow
+pip install flask flask_cors pymongo pdfplumber nltk SpeechRecognition librosa opencv-python tensorflow matplotlib
 pip list
 python.exe -m pip install --upgrade pip
 python server.py
