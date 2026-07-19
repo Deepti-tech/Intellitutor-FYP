@@ -15,3 +15,5 @@ __pycache__/
 
 # Generated application data
 uploads/
+
+cd backend.txt
