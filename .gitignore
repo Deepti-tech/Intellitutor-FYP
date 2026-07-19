@@ -10,3 +10,8 @@ __pycache__/
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+
+# Generated application data
+uploads/

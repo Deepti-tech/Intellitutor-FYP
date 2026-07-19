@@ -1,3 +1,5 @@
+import os
+
 import pymongo
 from uuid import uuid1
 from utils import cprint
@@ -7,11 +9,15 @@ unique_id = lambda : str(uuid1())
 
 class Mongo:
     def __init__(self, db_name, init_function = None):
-        cprint('Mongo Database initialised', color = 'yellow')
-        # self.db = pymongo.MongoClient()[db_name]
-        # self.db = pymongo.MongoClient('localhost', 27017)[db_name]
-        self.client = pymongo.MongoClient('mongodb+srv://singhdeepti311:bps@cluster0.n60nby8.mongodb.net/?appName=Cluster0')
+        mongo_uri = os.environ.get('MONGODB_URI')
+        if not mongo_uri:
+            raise RuntimeError(
+                'MONGODB_URI is not configured. Set it before starting the backend; '
+                'see backend/.env.example for the required format.'
+            )
+        self.client = pymongo.MongoClient(mongo_uri)
         self.db = self.client[db_name]
+        cprint('Mongo Database initialised', color = 'yellow')
 
         if init_function != None:
             init_function(self.db)

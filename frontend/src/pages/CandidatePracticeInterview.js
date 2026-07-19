@@ -93,10 +93,15 @@ const CandidatePracticeInterview = ({ }) => {
         }
         return navigate('/practiceInterviewAnalysis', {state: {videoPath: videoPath, id: id}});
     };
-    const genAI = new GoogleGenerativeAI("AIzaSyCcODVcOwLOY2q5-Tr2oqyduitCKVrel7Y");
+    const geminiApiKey = process.env.REACT_APP_GEMINI_API_KEY;
+    const genAI = geminiApiKey ? new GoogleGenerativeAI(geminiApiKey) : null;
     const [Questions, setQuestions] = useState('');
     const run = async () => {
         if (!runExecuted) {
+            if (!genAI) {
+                setGenerationError('Gemini is not configured. Set REACT_APP_GEMINI_API_KEY and restart the frontend.');
+                return;
+            }
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 console.log(userRole);
             const prompt = "Assume you are an interviewer. Ask 5 questions based on the role: " + userRole + " to a candidate. Do not give answers. Avoid using this ** ";

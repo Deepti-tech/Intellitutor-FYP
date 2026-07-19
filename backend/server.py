@@ -11,8 +11,12 @@ from video_analyzer import emotion_analyse
 from utils import cprint, unique_filename
 
 app = Flask(__name__)
-app.secret_key = 'dkald@2390'
-app.config['MONGO_URL'] = 'mongodb://localhost:27017'
+app.secret_key = os.environ.get('FLASK_SECRET_KEY')
+if not app.secret_key:
+    raise RuntimeError(
+        'FLASK_SECRET_KEY is not configured. Set it before starting the backend; '
+        'see backend/.env.example for the required format.'
+    )
 cors = CORS(app)
 # cors = CORS(app, supports_credentials=True, origins="http://localhost:3000")
 UPLOAD_FOLDER = 'uploads'
