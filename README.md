@@ -11,6 +11,14 @@ IntelliTutor is a full-stack interview-preparation and hiring-support applicatio
 - Resume similarity scoring against job descriptions
 - Job publishing, application tracking, dashboards, and interview scheduling
 
+## Technology stack
+
+- **Frontend:** React, React Router, Redux, Chart.js, browser media APIs, and responsive UI workflows
+- **Backend:** Python, Flask, REST-style APIs, CORS, session-based authentication, and background job handling
+- **Data:** MongoDB, PyMongo, document-oriented data modelling, and database initialization
+- **Applied AI/ML:** TensorFlow/Keras, OpenCV, NLTK, Librosa, Parselmouth, facial-emotion analysis, speech analysis, and resume similarity scoring
+- **Engineering practices:** Git, environment-based configuration, dependency management, API integration, and local full-stack development
+
 ## Architecture
 
 ```text
@@ -51,8 +59,9 @@ From PowerShell:
 
 ```powershell
 cd backend
-python -m venv ../venv
-../venv/Scripts/Activate.ps1
+python -m venv venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+venv/Scripts/Activate.ps1
 python -m pip install -r requirements.txt
 
 $env:MONGODB_URI = "mongodb+srv://<username>:<password>@<cluster-host>/?retryWrites=true&w=majority"
@@ -70,7 +79,7 @@ Open a second terminal:
 cd frontend
 Copy-Item .env.example .env
 # Replace the placeholder value in .env with a restricted Gemini API key.
-npm ci
+npm install
 npm start
 ```
 
