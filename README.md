@@ -2,6 +2,10 @@
 
 IntelliTutor is a full-stack interview-preparation and hiring-support application. Candidates can practise recorded interviews, receive video, speech, and resume feedback, and explore matching roles. Recruiters can manage openings and review candidate interview data from a shared dashboard.
 
+## Demo
+
+[Watch the IntelliTutor demo](https://drive.google.com/drive/folders/1FDUMxrDoENc8xiK1vKwJYTJSrH78FPFf?usp=drive_link)
+
 ## Highlights
 
 - Candidate and interviewer workflows with session-based authentication
